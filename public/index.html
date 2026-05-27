@@ -10,720 +10,180 @@
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
   <style>
     :root {
-      --bg: #060d1f;
-      --bg2: #0a1628;
-      --surface: #0f1f3d;
-      --border: #1a3060;
-      --accent: #00c8ff;
-      --accent2: #ff4d6d;
-      --green: #00ff88;
-      --yellow: #ffd60a;
-      --text: #c8deff;
-      --muted: #4a6899;
-      --font-head: 'Orbitron', monospace;
-      --font-body: 'Inter', sans-serif;
+      --bg: #060d1f; --bg2: #0a1628; --surface: #0f1f3d; --border: #1a3060;
+      --accent: #00c8ff; --accent2: #ff4d6d; --green: #00ff88; --yellow: #ffd60a;
+      --text: #c8deff; --muted: #4a6899;
+      --font-head: 'Orbitron', monospace; --font-body: 'Inter', sans-serif;
     }
-
     * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: var(--font-body);
-      min-height: 100vh;
-      overflow-x: hidden;
-    }
-
-    /* Animated background */
+    body { background: var(--bg); color: var(--text); font-family: var(--font-body); min-height: 100vh; overflow-x: hidden; }
     body::before {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background:
-        radial-gradient(ellipse 80% 50% at 50% -20%, rgba(0,200,255,0.07) 0%, transparent 60%),
+      content: ''; position: fixed; inset: 0;
+      background: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(0,200,255,0.07) 0%, transparent 60%),
         linear-gradient(rgba(0,200,255,0.02) 1px, transparent 1px),
         linear-gradient(90deg, rgba(0,200,255,0.02) 1px, transparent 1px);
       background-size: 100% 100%, 50px 50px, 50px 50px;
-      pointer-events: none;
-      z-index: 0;
+      pointer-events: none; z-index: 0;
     }
-
     #app { position: relative; z-index: 1; }
-
-    /* ── SCREENS ── */
     .screen { display: none; min-height: 100vh; }
     .screen.active { display: flex; flex-direction: column; }
 
-    /* ══════════════════════════════
-       LOGIN SCREEN
-    ══════════════════════════════ */
-    #screenLogin {
-      align-items: center;
-      justify-content: center;
-      padding: 24px;
-    }
-
-    .login-wrap {
-      width: 100%;
-      max-width: 380px;
-    }
-
-    .brand {
-      text-align: center;
-      margin-bottom: 40px;
-    }
-
-    .brand-icon {
-      width: 72px; height: 72px;
-      border: 2px solid var(--accent);
-      border-radius: 16px;
-      display: flex; align-items: center; justify-content: center;
-      margin: 0 auto 16px;
-      position: relative;
-      overflow: hidden;
-      background: rgba(0,200,255,0.05);
-    }
-
-    .brand-icon::after {
-      content: '';
-      position: absolute;
-      width: 100%; height: 3px;
-      background: linear-gradient(90deg, transparent, var(--accent), transparent);
-      animation: scanH 2s linear infinite;
-    }
-
+    /* LOGIN */
+    #screenLogin { align-items: center; justify-content: center; padding: 24px; }
+    .login-wrap { width: 100%; max-width: 380px; }
+    .brand { text-align: center; margin-bottom: 36px; }
+    .brand-icon { width: 72px; height: 72px; border: 2px solid var(--accent); border-radius: 16px; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; position: relative; overflow: hidden; background: rgba(0,200,255,0.05); }
+    .brand-icon::after { content: ''; position: absolute; width: 100%; height: 3px; background: linear-gradient(90deg, transparent, var(--accent), transparent); animation: scanH 2s linear infinite; }
     @keyframes scanH { 0% { top: -3px; } 100% { top: 100%; } }
-
-    .brand h1 {
-      font-family: var(--font-head);
-      font-size: 28px;
-      font-weight: 900;
-      color: var(--accent);
-      letter-spacing: 4px;
-    }
-
-    .brand p {
-      font-size: 11px;
-      color: var(--muted);
-      letter-spacing: 3px;
-      text-transform: uppercase;
-      margin-top: 4px;
-    }
-
-    .trial-badge {
-      display: inline-block;
-      background: linear-gradient(135deg, var(--yellow), #ff8c00);
-      color: #000;
-      font-size: 10px;
-      font-weight: 700;
-      letter-spacing: 1px;
-      padding: 4px 12px;
-      border-radius: 20px;
-      margin-top: 10px;
-      text-transform: uppercase;
-    }
-
-    .card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      padding: 28px;
-      margin-bottom: 16px;
-    }
-
-    .card-title {
-      font-family: var(--font-head);
-      font-size: 11px;
-      color: var(--accent);
-      letter-spacing: 3px;
-      text-transform: uppercase;
-      margin-bottom: 20px;
-    }
-
-    .field { margin-bottom: 14px; }
-
-    label {
-      display: block;
-      font-size: 11px;
-      color: var(--muted);
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      margin-bottom: 6px;
-    }
-
-    input[type=text], input[type=email], input[type=password], input[type=number], input[type=url] {
-      width: 100%;
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 13px 16px;
-      color: var(--text);
-      font-family: var(--font-body);
-      font-size: 15px;
-      outline: none;
-      transition: border-color 0.2s, box-shadow 0.2s;
-      -webkit-appearance: none;
-    }
-
-    input:focus {
-      border-color: var(--accent);
-      box-shadow: 0 0 0 3px rgba(0,200,255,0.1);
-    }
-
+    .brand h1 { font-family: var(--font-head); font-size: 28px; font-weight: 900; color: var(--accent); letter-spacing: 4px; }
+    .brand p { font-size: 11px; color: var(--muted); letter-spacing: 3px; text-transform: uppercase; margin-top: 4px; }
+    .trial-badge { display: inline-block; background: linear-gradient(135deg, var(--yellow), #ff8c00); color: #000; font-size: 10px; font-weight: 700; letter-spacing: 1px; padding: 4px 12px; border-radius: 20px; margin-top: 10px; text-transform: uppercase; }
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 24px; margin-bottom: 14px; }
+    .card-title { font-family: var(--font-head); font-size: 11px; color: var(--accent); letter-spacing: 3px; text-transform: uppercase; margin-bottom: 18px; }
+    .field { margin-bottom: 13px; }
+    label { display: block; font-size: 11px; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 5px; }
+    input[type=text],input[type=email],input[type=password],input[type=number],input[type=url] { width: 100%; background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 13px 16px; color: var(--text); font-family: var(--font-body); font-size: 15px; outline: none; transition: border-color .2s, box-shadow .2s; -webkit-appearance: none; }
+    input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(0,200,255,.1); }
     input::placeholder { color: var(--muted); }
+    .btn { width: 100%; padding: 15px; border: none; border-radius: 12px; font-family: var(--font-body); font-size: 15px; font-weight: 600; letter-spacing: 1px; cursor: pointer; transition: all .2s; }
+    .btn-primary { background: linear-gradient(135deg, var(--accent) 0%, #0090c0 100%); color: #000; }
+    .btn-primary:active { transform: scale(.98); }
+    .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--muted); font-size: 13px; padding: 11px; margin-top: 8px; }
+    .btn-danger { background: rgba(255,77,109,.15); border: 1px solid rgba(255,77,109,.3); color: var(--accent2); margin-top: 8px; }
+    .err { background: rgba(255,77,109,.1); border: 1px solid rgba(255,77,109,.3); border-radius: 10px; padding: 12px; font-size: 13px; color: var(--accent2); margin-top: 12px; display: none; }
 
-    .btn {
-      width: 100%;
-      padding: 15px;
-      border: none;
-      border-radius: 12px;
-      font-family: var(--font-body);
-      font-size: 15px;
-      font-weight: 600;
-      letter-spacing: 1px;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .btn-primary {
-      background: linear-gradient(135deg, var(--accent) 0%, #0090c0 100%);
-      color: #000;
-    }
-
-    .btn-primary:active { transform: scale(0.98); }
-
-    .btn-outline {
-      background: transparent;
-      border: 1px solid var(--border);
-      color: var(--muted);
-      font-size: 13px;
-      padding: 11px;
-      margin-top: 8px;
-    }
-
-    .err {
-      background: rgba(255,77,109,0.1);
-      border: 1px solid rgba(255,77,109,0.3);
-      border-radius: 10px;
-      padding: 12px;
-      font-size: 13px;
-      color: var(--accent2);
-      margin-top: 12px;
-      display: none;
-    }
-
-    /* ══════════════════════════════
-       MAIN APP
-    ══════════════════════════════ */
-    /* Header */
-    .header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 14px 16px 10px;
-      border-bottom: 1px solid var(--border);
-      background: rgba(6,13,31,0.95);
-      backdrop-filter: blur(10px);
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }
-
-    .header-logo {
-      font-family: var(--font-head);
-      font-size: 16px;
-      font-weight: 900;
-      color: var(--accent);
-      letter-spacing: 3px;
-    }
-
-    .header-logo span {
-      font-size: 9px;
-      color: var(--muted);
-      display: block;
-      letter-spacing: 2px;
-    }
-
+    /* HEADER */
+    .header { display: flex; align-items: center; justify-content: space-between; padding: 14px 16px 10px; border-bottom: 1px solid var(--border); background: rgba(6,13,31,.95); backdrop-filter: blur(10px); position: sticky; top: 0; z-index: 100; }
+    .header-logo { font-family: var(--font-head); font-size: 16px; font-weight: 900; color: var(--accent); letter-spacing: 3px; }
+    .header-logo span { font-size: 9px; color: var(--muted); display: block; letter-spacing: 2px; }
     .header-right { display: flex; align-items: center; gap: 12px; }
+    .icon-btn { width: 36px; height: 36px; border-radius: 10px; border: 1px solid var(--border); background: var(--surface); display: flex; align-items: center; justify-content: center; cursor: pointer; position: relative; }
+    .notif-dot { position: absolute; top: 6px; right: 6px; width: 8px; height: 8px; background: var(--accent2); border-radius: 50%; border: 2px solid var(--bg); display: none; }
+    .avatar { width: 36px; height: 36px; border-radius: 10px; background: linear-gradient(135deg, var(--accent), #0060a0); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; color: #000; cursor: pointer; }
 
-    .notif-btn {
-      width: 36px; height: 36px;
-      border-radius: 10px;
-      border: 1px solid var(--border);
-      background: var(--surface);
-      display: flex; align-items: center; justify-content: center;
-      cursor: pointer;
-      position: relative;
-    }
-
-    .notif-dot {
-      position: absolute;
-      top: 6px; right: 6px;
-      width: 8px; height: 8px;
-      background: var(--accent2);
-      border-radius: 50%;
-      border: 2px solid var(--bg);
-    }
-
-    .avatar {
-      width: 36px; height: 36px;
-      border-radius: 10px;
-      background: linear-gradient(135deg, var(--accent), #0060a0);
-      display: flex; align-items: center; justify-content: center;
-      font-weight: 700;
-      font-size: 14px;
-      color: #000;
-      cursor: pointer;
-    }
-
-    /* Summary bar */
-    .summary {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
-      padding: 14px 16px;
-    }
-
-    .sum-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 14px 12px;
-      text-align: center;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .sum-card::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 2px;
-    }
-
+    /* SUMMARY */
+    .summary { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; padding: 14px 16px; }
+    .sum-card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 14px 12px; text-align: center; position: relative; overflow: hidden; }
+    .sum-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; }
     .sum-card.online::before { background: var(--green); }
     .sum-card.offline::before { background: var(--accent2); }
     .sum-card.total::before { background: var(--accent); }
-
-    .sum-num {
-      font-family: var(--font-head);
-      font-size: 26px;
-      font-weight: 700;
-      line-height: 1;
-      margin-bottom: 4px;
-    }
-
+    .sum-num { font-family: var(--font-head); font-size: 26px; font-weight: 700; line-height: 1; margin-bottom: 4px; }
     .sum-card.online .sum-num { color: var(--green); }
     .sum-card.offline .sum-num { color: var(--accent2); }
     .sum-card.total .sum-num { color: var(--accent); }
+    .sum-label { font-size: 10px; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; }
 
-    .sum-label {
-      font-size: 10px;
-      color: var(--muted);
-      letter-spacing: 1px;
-      text-transform: uppercase;
-    }
-
-    /* Map area */
-    .map-section {
-      padding: 0 16px 12px;
-    }
-
-    .section-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 12px;
-    }
-
-    .section-title {
-      font-family: var(--font-head);
-      font-size: 11px;
-      color: var(--accent);
-      letter-spacing: 2px;
-      text-transform: uppercase;
-    }
-
-    .add-btn {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      background: rgba(0,200,255,0.1);
-      border: 1px solid rgba(0,200,255,0.3);
-      border-radius: 20px;
-      padding: 6px 14px;
-      color: var(--accent);
-      font-size: 12px;
-      font-weight: 600;
-      cursor: pointer;
-    }
-
-    /* Network map canvas */
-    .map-canvas {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      height: 260px;
-      position: relative;
-      overflow: hidden;
-      margin-bottom: 16px;
-    }
-
-    .map-canvas svg {
-      width: 100%;
-      height: 100%;
-    }
-
-    .map-overlay {
-      position: absolute;
-      top: 10px; right: 10px;
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-
-    .map-legend {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      font-size: 10px;
-      color: var(--muted);
-      background: rgba(6,13,31,0.8);
-      padding: 4px 8px;
-      border-radius: 6px;
-    }
-
+    /* MAP */
+    .map-section { padding: 0 16px 12px; }
+    .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+    .section-title { font-family: var(--font-head); font-size: 11px; color: var(--accent); letter-spacing: 2px; text-transform: uppercase; }
+    .add-btn { display: flex; align-items: center; gap: 5px; background: rgba(0,200,255,.1); border: 1px solid rgba(0,200,255,.3); border-radius: 20px; padding: 6px 14px; color: var(--accent); font-size: 12px; font-weight: 600; cursor: pointer; }
+    .map-canvas { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; height: 240px; position: relative; overflow: hidden; margin-bottom: 16px; }
+    .map-canvas svg { width: 100%; height: 100%; }
+    .map-legend-row { display: flex; gap: 8px; }
+    .map-legend { display: flex; align-items: center; gap: 5px; font-size: 10px; color: var(--muted); background: rgba(6,13,31,.8); padding: 4px 8px; border-radius: 6px; }
     .legend-dot { width: 8px; height: 8px; border-radius: 50%; }
 
-    /* Router list */
+    /* ROUTER CARDS */
     .router-list { display: flex; flex-direction: column; gap: 10px; padding: 0 16px 100px; }
-
-    .router-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 16px;
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      cursor: pointer;
-      transition: border-color 0.2s, transform 0.1s;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .router-card:active { transform: scale(0.98); }
-
-    .router-card.online { border-left: 3px solid var(--green); }
-    .router-card.offline { border-left: 3px solid var(--accent2); }
-    .router-card.warning { border-left: 3px solid var(--yellow); }
-
-    .router-icon {
-      width: 44px; height: 44px;
-      border-radius: 12px;
-      display: flex; align-items: center; justify-content: center;
-      flex-shrink: 0;
-    }
-
-    .router-card.online .router-icon { background: rgba(0,255,136,0.1); }
-    .router-card.offline .router-icon { background: rgba(255,77,109,0.1); }
-    .router-card.warning .router-icon { background: rgba(255,214,10,0.1); }
-
+    .router-card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 16px; display: flex; align-items: center; gap: 14px; cursor: pointer; transition: border-color .2s, transform .1s; border-left: 3px solid var(--muted); }
+    .router-card:active { transform: scale(.98); }
+    .router-card.online { border-left-color: var(--green); }
+    .router-card.offline { border-left-color: var(--accent2); }
+    .router-card.checking { border-left-color: var(--yellow); }
+    .router-icon { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .router-card.online .router-icon { background: rgba(0,255,136,.1); }
+    .router-card.offline .router-icon { background: rgba(255,77,109,.1); }
+    .router-card.checking .router-icon { background: rgba(255,214,10,.1); }
     .router-info { flex: 1; min-width: 0; }
+    .router-name { font-weight: 600; font-size: 14px; color: var(--text); margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .router-ip { font-size: 12px; color: var(--muted); font-family: monospace; }
+    .router-stats { display: flex; gap: 8px; margin-top: 6px; }
+    .rstat { font-size: 11px; padding: 2px 8px; border-radius: 20px; background: rgba(0,200,255,.08); color: var(--accent); }
+    .rstat.tx { background: rgba(255,77,109,.08); color: var(--accent2); }
+    .router-status { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; flex-shrink: 0; }
+    .status-pill { font-size: 10px; font-weight: 700; letter-spacing: 1px; padding: 3px 10px; border-radius: 20px; text-transform: uppercase; }
+    .online .status-pill { background: rgba(0,255,136,.15); color: var(--green); }
+    .offline .status-pill { background: rgba(255,77,109,.15); color: var(--accent2); }
+    .checking .status-pill { background: rgba(255,214,10,.15); color: var(--yellow); }
+    .pulse { width: 10px; height: 10px; border-radius: 50%; background: var(--green); position: relative; }
+    .pulse::after { content: ''; position: absolute; inset: -4px; border-radius: 50%; border: 2px solid var(--green); animation: pulseRing 2s ease-out infinite; }
+    @keyframes pulseRing { 0% { transform: scale(.8); opacity: 1; } 100% { transform: scale(2); opacity: 0; } }
 
-    .router-name {
-      font-weight: 600;
-      font-size: 14px;
-      color: var(--text);
-      margin-bottom: 3px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .router-ip {
-      font-size: 12px;
-      color: var(--muted);
-      font-family: monospace;
-    }
-
-    .router-stats {
-      display: flex;
-      gap: 8px;
-      margin-top: 6px;
-    }
-
-    .rstat {
-      font-size: 11px;
-      padding: 2px 8px;
-      border-radius: 20px;
-      background: rgba(0,200,255,0.08);
-      color: var(--accent);
-    }
-
-    .router-status {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-end;
-      gap: 6px;
-      flex-shrink: 0;
-    }
-
-    .status-pill {
-      font-size: 10px;
-      font-weight: 700;
-      letter-spacing: 1px;
-      padding: 3px 10px;
-      border-radius: 20px;
-      text-transform: uppercase;
-    }
-
-    .online .status-pill { background: rgba(0,255,136,0.15); color: var(--green); }
-    .offline .status-pill { background: rgba(255,77,109,0.15); color: var(--accent2); }
-    .warning .status-pill { background: rgba(255,214,10,0.15); color: var(--yellow); }
-
-    .ping-time { font-size: 11px; color: var(--muted); font-family: monospace; }
-
-    /* Pulse animation for online routers */
-    .pulse {
-      width: 10px; height: 10px;
-      border-radius: 50%;
-      background: var(--green);
-      position: relative;
-    }
-
-    .pulse::after {
-      content: '';
-      position: absolute;
-      inset: -4px;
-      border-radius: 50%;
-      border: 2px solid var(--green);
-      animation: pulseRing 2s ease-out infinite;
-    }
-
-    @keyframes pulseRing {
-      0% { transform: scale(0.8); opacity: 1; }
-      100% { transform: scale(2); opacity: 0; }
-    }
-
-    /* Bottom nav */
-    .bottom-nav {
-      position: fixed;
-      bottom: 0; left: 0; right: 0;
-      background: rgba(6,13,31,0.97);
-      border-top: 1px solid var(--border);
-      backdrop-filter: blur(20px);
-      display: flex;
-      padding: 10px 0 env(safe-area-inset-bottom, 10px);
-      z-index: 100;
-    }
-
-    .nav-btn {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 4px;
-      padding: 6px;
-      cursor: pointer;
-      opacity: 0.4;
-      transition: opacity 0.2s;
-    }
-
+    /* BOTTOM NAV */
+    .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(6,13,31,.97); border-top: 1px solid var(--border); backdrop-filter: blur(20px); display: flex; padding: 10px 0 env(safe-area-inset-bottom,10px); z-index: 100; }
+    .nav-btn { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 6px; cursor: pointer; opacity: .4; transition: opacity .2s; }
     .nav-btn.active { opacity: 1; }
     .nav-btn.active .nav-label { color: var(--accent); }
+    .nav-label { font-size: 10px; letter-spacing: .5px; }
 
-    .nav-label {
-      font-size: 10px;
-      letter-spacing: 0.5px;
-    }
-
-    /* Detail panel */
-    .detail-panel {
-      position: fixed;
-      inset: 0;
-      background: var(--bg);
-      z-index: 200;
-      display: none;
-      flex-direction: column;
-      overflow-y: auto;
-    }
-
-    .detail-panel.open { display: flex; }
-
-    .detail-header {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      padding: 16px;
-      border-bottom: 1px solid var(--border);
-      position: sticky;
-      top: 0;
-      background: rgba(6,13,31,0.97);
-      backdrop-filter: blur(10px);
-      z-index: 10;
-    }
-
-    .back-btn {
-      width: 36px; height: 36px;
-      border-radius: 10px;
-      border: 1px solid var(--border);
-      background: var(--surface);
-      display: flex; align-items: center; justify-content: center;
-      cursor: pointer;
-    }
-
-    .detail-title { font-weight: 600; font-size: 16px; }
-    .detail-ip { font-size: 12px; color: var(--muted); font-family: monospace; }
-
-    .detail-body { padding: 16px; flex: 1; }
-
-    .detail-stats {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin-bottom: 16px;
-    }
-
-    .dstat {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 16px;
-    }
-
-    .dstat-label {
-      font-size: 10px;
-      color: var(--muted);
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      margin-bottom: 8px;
-    }
-
-    .dstat-value {
-      font-family: var(--font-head);
-      font-size: 20px;
-      font-weight: 700;
-    }
-
-    .dstat.rx .dstat-value { color: var(--accent); }
-    .dstat.tx .dstat-value { color: var(--accent2); }
-    .dstat.up .dstat-value { color: var(--green); }
-    .dstat.clients .dstat-value { color: var(--yellow); }
-
-    .chart-box {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 16px;
-      margin-bottom: 16px;
-    }
-
-    .chart-box-title {
-      font-family: var(--font-head);
-      font-size: 10px;
-      color: var(--accent);
-      letter-spacing: 2px;
-      margin-bottom: 14px;
-    }
-
-    canvas { width: 100% !important; }
-
-    /* Add router modal */
-    .modal {
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.7);
-      backdrop-filter: blur(4px);
-      z-index: 300;
-      display: none;
-      align-items: flex-end;
-    }
-
-    .modal.open { display: flex; }
-
-    .modal-content {
-      background: var(--bg2);
-      border: 1px solid var(--border);
-      border-radius: 24px 24px 0 0;
-      padding: 24px;
-      width: 100%;
-      max-height: 85vh;
-      overflow-y: auto;
-    }
-
-    .modal-handle {
-      width: 40px; height: 4px;
-      background: var(--border);
-      border-radius: 2px;
-      margin: 0 auto 20px;
-    }
-
-    .modal-title {
-      font-family: var(--font-head);
-      font-size: 14px;
-      color: var(--accent);
-      letter-spacing: 2px;
-      margin-bottom: 20px;
-    }
-
-    /* Trial banner */
-    .trial-banner {
-      margin: 0 16px 12px;
-      background: linear-gradient(135deg, rgba(255,214,10,0.1), rgba(255,140,0,0.1));
-      border: 1px solid rgba(255,214,10,0.3);
-      border-radius: 14px;
-      padding: 14px 16px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-    }
-
+    /* TRIAL BANNER */
+    .trial-banner { margin: 0 16px 12px; background: linear-gradient(135deg,rgba(255,214,10,.1),rgba(255,140,0,.1)); border: 1px solid rgba(255,214,10,.3); border-radius: 14px; padding: 14px 16px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
     .trial-text { font-size: 13px; color: var(--yellow); font-weight: 600; }
     .trial-sub { font-size: 11px; color: var(--muted); margin-top: 2px; }
+    .upgrade-btn { background: linear-gradient(135deg,var(--yellow),#ff8c00); color: #000; font-weight: 700; font-size: 12px; padding: 8px 16px; border-radius: 20px; border: none; cursor: pointer; white-space: nowrap; flex-shrink: 0; }
 
-    .upgrade-btn {
-      background: linear-gradient(135deg, var(--yellow), #ff8c00);
-      color: #000;
-      font-weight: 700;
-      font-size: 12px;
-      padding: 8px 16px;
-      border-radius: 20px;
-      border: none;
-      cursor: pointer;
-      white-space: nowrap;
-      flex-shrink: 0;
-    }
+    /* DETAIL PANEL */
+    .panel { position: fixed; inset: 0; background: var(--bg); z-index: 200; display: none; flex-direction: column; overflow-y: auto; }
+    .panel.open { display: flex; }
+    .panel-header { display: flex; align-items: center; gap: 14px; padding: 16px; border-bottom: 1px solid var(--border); position: sticky; top: 0; background: rgba(6,13,31,.97); backdrop-filter: blur(10px); z-index: 10; }
+    .back-btn { width: 36px; height: 36px; border-radius: 10px; border: 1px solid var(--border); background: var(--surface); display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; }
+    .panel-body { padding: 16px; flex: 1; }
+    .detail-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
+    .dstat { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 16px; }
+    .dstat-label { font-size: 10px; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 8px; }
+    .dstat-value { font-family: var(--font-head); font-size: 20px; font-weight: 700; }
+    .dstat.rx .dstat-value { color: var(--accent); }
+    .dstat.tx .dstat-value { color: var(--accent2); }
+    .dstat.up .dstat-value { color: var(--green); font-size:15px; }
+    .dstat.cpu .dstat-value { color: var(--yellow); }
+    .chart-box { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 16px; margin-bottom: 16px; }
+    .chart-box-title { font-family: var(--font-head); font-size: 10px; color: var(--accent); letter-spacing: 2px; margin-bottom: 14px; }
 
-    /* Loader */
-    .loader {
-      display: inline-block;
-      width: 18px; height: 18px;
-      border: 2px solid rgba(0,0,0,0.2);
-      border-top-color: #000;
-      border-radius: 50%;
-      animation: spin 0.8s linear infinite;
-      vertical-align: middle;
-      margin-left: 8px;
-    }
+    /* ALERTS PANEL */
+    .alert-item { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 14px 16px; margin-bottom: 10px; display: flex; gap: 12px; align-items: flex-start; }
+    .alert-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; margin-top: 4px; }
+    .alert-dot.red { background: var(--accent2); box-shadow: 0 0 8px var(--accent2); }
+    .alert-dot.green { background: var(--green); box-shadow: 0 0 8px var(--green); }
+    .alert-dot.yellow { background: var(--yellow); }
+    .alert-name { font-weight: 600; font-size: 14px; margin-bottom: 3px; }
+    .alert-msg { font-size: 12px; color: var(--muted); }
+    .alert-time { font-size: 11px; color: var(--muted); margin-top: 4px; font-family: monospace; }
 
+    /* SETTINGS PANEL */
+    .setting-row { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 16px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
+    .setting-label { font-size: 14px; font-weight: 500; }
+    .setting-sub { font-size: 12px; color: var(--muted); margin-top: 2px; }
+    .setting-val { font-size: 13px; color: var(--accent); font-family: monospace; }
+
+    /* MODAL */
+    .modal { position: fixed; inset: 0; background: rgba(0,0,0,.7); backdrop-filter: blur(4px); z-index: 300; display: none; align-items: flex-end; }
+    .modal.open { display: flex; }
+    .modal-content { background: var(--bg2); border: 1px solid var(--border); border-radius: 24px 24px 0 0; padding: 24px; width: 100%; max-height: 90vh; overflow-y: auto; }
+    .modal-handle { width: 40px; height: 4px; background: var(--border); border-radius: 2px; margin: 0 auto 20px; }
+    .modal-title { font-family: var(--font-head); font-size: 14px; color: var(--accent); letter-spacing: 2px; margin-bottom: 20px; }
+    .iface-option { display: flex; align-items: center; gap: 12px; background: var(--bg); border: 2px solid var(--border); border-radius: 10px; padding: 12px 14px; cursor: pointer; transition: border-color .2s; margin-bottom: 6px; }
+    .iface-option.selected { border-color: var(--accent); background: rgba(0,200,255,.06); }
+    .iface-option-name { font-weight: 600; font-size: 14px; }
+    .iface-option-type { font-size: 11px; color: var(--muted); margin-top: 2px; }
+    .iface-radio { width: 18px; height: 18px; border-radius: 50%; border: 2px solid var(--muted); flex-shrink: 0; transition: all .2s; }
+    .iface-option.selected .iface-radio { border-color: var(--accent); background: var(--accent); }
+
+    /* MISC */
+    .loader { display: inline-block; width: 18px; height: 18px; border: 2px solid rgba(0,0,0,.2); border-top-color: #000; border-radius: 50%; animation: spin .8s linear infinite; vertical-align: middle; margin-left: 8px; }
     @keyframes spin { to { transform: rotate(360deg); } }
-
-    .empty-state {
-      text-align: center;
-      padding: 40px 20px;
-      color: var(--muted);
-    }
-
-    .empty-state svg { opacity: 0.3; margin-bottom: 16px; }
-    .empty-state p { font-size: 14px; }
+    .empty-state { text-align: center; padding: 40px 20px; color: var(--muted); }
+    .empty-state p { font-size: 14px; margin-top: 12px; line-height: 1.6; }
+    canvas { width: 100% !important; }
+    .page-pad { padding: 16px 16px 100px; }
   </style>
 </head>
 <body>
 <div id="app">
 
-  <!-- ══ LOGIN SCREEN ══ -->
+  <!-- LOGIN -->
   <div id="screenLogin" class="screen active">
     <div class="login-wrap">
       <div class="brand">
@@ -736,227 +196,194 @@
         <p>ISP Network Monitor</p>
         <div class="trial-badge">⚡ 30 días gratis</div>
       </div>
-
       <div class="card">
-        <div class="card-title">Iniciar sesión</div>
-        <div class="field">
-          <label>Email</label>
-          <input id="loginEmail" type="email" placeholder="isp@empresa.com"/>
-        </div>
-        <div class="field">
-          <label>Contraseña</label>
-          <input id="loginPass" type="password" placeholder="••••••••"/>
-        </div>
-        <button class="btn btn-primary" id="btnLogin">ENTRAR</button>
-        <div class="err" id="loginErr"></div>
-      </div>
-
-      <div class="card">
-        <div class="card-title">¿Nuevo en MikroMon?</div>
-        <div class="field">
-          <label>Nombre del ISP</label>
-          <input id="regName" type="text" placeholder="Mi ISP S.A."/>
-        </div>
-        <div class="field">
-          <label>Email</label>
-          <input id="regEmail" type="email" placeholder="admin@miisp.com"/>
-        </div>
-        <div class="field">
-          <label>Contraseña</label>
-          <input id="regPass" type="password" placeholder="Mínimo 6 caracteres"/>
-        </div>
+        <div class="card-title">Registrarse</div>
+        <div class="field"><label>Nombre del ISP</label><input id="regName" type="text" placeholder="Mi ISP S.A."/></div>
+        <div class="field"><label>Email</label><input id="regEmail" type="email" placeholder="admin@miisp.com"/></div>
+        <div class="field"><label>Contraseña</label><input id="regPass" type="password" placeholder="Mínimo 6 caracteres"/></div>
         <button class="btn btn-primary" id="btnRegister">CREAR CUENTA GRATIS</button>
         <div class="err" id="regErr"></div>
+      </div>
+      <div class="card">
+        <div class="card-title">Ya tengo cuenta</div>
+        <div class="field"><label>Email</label><input id="loginEmail" type="email" placeholder="admin@miisp.com"/></div>
+        <div class="field"><label>Contraseña</label><input id="loginPass" type="password" placeholder="••••••••"/></div>
+        <button class="btn btn-primary" id="btnLogin">ENTRAR</button>
+        <div class="err" id="loginErr"></div>
       </div>
     </div>
   </div>
 
-  <!-- ══ MAIN DASHBOARD ══ -->
+  <!-- MAIN DASHBOARD -->
   <div id="screenMain" class="screen">
     <div class="header">
-      <div>
-        <div class="header-logo">MIKROMON<span>ISP MONITOR</span></div>
-      </div>
+      <div><div class="header-logo">MIKROMON<span>ISP MONITOR</span></div></div>
       <div class="header-right">
-        <div class="notif-btn" id="btnNotif">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#c8deff" stroke-width="2">
-            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 0 1-3.46 0"/>
-          </svg>
-          <div class="notif-dot" id="notifDot" style="display:none"></div>
+        <div class="icon-btn" id="btnNotif">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#c8deff" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+          <div class="notif-dot" id="notifDot"></div>
         </div>
         <div class="avatar" id="avatarBtn">R</div>
       </div>
     </div>
 
-    <!-- Trial banner -->
     <div class="trial-banner" id="trialBanner">
-      <div>
-        <div class="trial-text">⚡ Período de prueba</div>
-        <div class="trial-sub" id="trialDaysLeft">28 días restantes</div>
-      </div>
+      <div><div class="trial-text">⚡ Período de prueba</div><div class="trial-sub" id="trialDaysLeft">30 días restantes</div></div>
       <button class="upgrade-btn" id="btnUpgrade">Activar $5</button>
     </div>
 
-    <!-- Summary -->
     <div class="summary">
-      <div class="sum-card online">
-        <div class="sum-num" id="countOnline">0</div>
-        <div class="sum-label">En línea</div>
-      </div>
-      <div class="sum-card offline">
-        <div class="sum-num" id="countOffline">0</div>
-        <div class="sum-label">Caídos</div>
-      </div>
-      <div class="sum-card total">
-        <div class="sum-num" id="countTotal">0</div>
-        <div class="sum-label">Total</div>
-      </div>
+      <div class="sum-card online"><div class="sum-num" id="countOnline">0</div><div class="sum-label">En línea</div></div>
+      <div class="sum-card offline"><div class="sum-num" id="countOffline">0</div><div class="sum-label">Caídos</div></div>
+      <div class="sum-card total"><div class="sum-num" id="countTotal">0</div><div class="sum-label">Total</div></div>
     </div>
 
-    <!-- Map -->
     <div class="map-section">
       <div class="section-header">
         <span class="section-title">MAPA DE RED</span>
-        <div class="map-overlay-controls" style="display:flex;gap:8px">
-          <div class="map-legend"><div class="legend-dot" style="background:var(--green)"></div> Online</div>
-          <div class="map-legend"><div class="legend-dot" style="background:var(--accent2)"></div> Caído</div>
+        <div class="map-legend-row">
+          <div class="map-legend"><div class="legend-dot" style="background:var(--green)"></div>Online</div>
+          <div class="map-legend"><div class="legend-dot" style="background:var(--accent2)"></div>Caído</div>
         </div>
       </div>
       <div class="map-canvas">
-        <svg id="networkMap" viewBox="0 0 360 260" preserveAspectRatio="xMidYMid meet">
-          <defs>
-            <filter id="glow">
-              <feGaussianBlur stdDeviation="2" result="blur"/>
-              <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-            </filter>
-          </defs>
-          <!-- Central node -->
-          <g id="centerNode">
-            <circle cx="180" cy="130" r="18" fill="rgba(0,200,255,0.15)" stroke="#00c8ff" stroke-width="2"/>
-            <text x="180" y="134" text-anchor="middle" fill="#00c8ff" font-size="9" font-family="Orbitron">HQ</text>
-          </g>
-          <!-- Router nodes rendered by JS -->
+        <svg id="networkMap" viewBox="0 0 360 240" preserveAspectRatio="xMidYMid meet">
+          <defs><filter id="glow"><feGaussianBlur stdDeviation="2" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
+          <circle cx="180" cy="120" r="18" fill="rgba(0,200,255,.15)" stroke="#00c8ff" stroke-width="2"/>
+          <text x="180" y="124" text-anchor="middle" fill="#00c8ff" font-size="9" font-family="Orbitron">HQ</text>
           <g id="routerNodes"></g>
         </svg>
       </div>
     </div>
 
-    <!-- Router list -->
     <div class="map-section">
       <div class="section-header">
         <span class="section-title">ROUTERS</span>
         <div class="add-btn" id="btnAddRouter">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-          Agregar
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Agregar
         </div>
       </div>
     </div>
-
     <div class="router-list" id="routerList">
       <div class="empty-state">
-        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#4a6899" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/><path d="M7 7h.01M11 7h.01"/></svg>
-        <p>No hay routers.<br/>Toca "Agregar" para comenzar.</p>
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#4a6899" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+        <p>No hay routers.<br/>Toca "+ Agregar" para comenzar.</p>
       </div>
     </div>
 
-    <!-- Bottom nav -->
     <div class="bottom-nav">
-      <div class="nav-btn active" id="navDash">
+      <div class="nav-btn active" id="navDash" onclick="showTab('dash')">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
         <span class="nav-label">Dashboard</span>
       </div>
-      <div class="nav-btn" id="navAlerts">
+      <div class="nav-btn" id="navAlerts" onclick="showTab('alerts')">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 0 1-3.46 0"/></svg>
         <span class="nav-label">Alertas</span>
       </div>
-      <div class="nav-btn" id="navSettings">
+      <div class="nav-btn" id="navSettings" onclick="showTab('settings')">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93A10 10 0 1 1 4.93 19.07 10 10 0 0 1 19.07 4.93"/></svg>
-        <span class="nav-label">Config</span>
+        <span class="nav-label">Ajustes</span>
       </div>
-      <div class="nav-btn" id="navLogout">
+      <div class="nav-btn" id="navLogout" onclick="doLogout()">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg>
         <span class="nav-label">Salir</span>
       </div>
     </div>
   </div>
 
-  <!-- ══ ROUTER DETAIL PANEL ══ -->
-  <div id="detailPanel" class="detail-panel">
-    <div class="detail-header">
-      <div class="back-btn" id="btnBack">
+  <!-- ALERTS PANEL -->
+  <div id="panelAlerts" class="panel">
+    <div class="panel-header">
+      <div class="back-btn" onclick="closePanel('panelAlerts')">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#c8deff" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
       </div>
-      <div>
-        <div class="detail-title" id="detailName">Router</div>
-        <div class="detail-ip" id="detailIp">0.0.0.0</div>
-      </div>
-      <div style="margin-left:auto">
-        <div class="status-pill" id="detailStatus">Online</div>
-      </div>
+      <div><div style="font-weight:600;font-size:16px">Alertas</div><div style="font-size:12px;color:var(--muted)">Eventos de red</div></div>
     </div>
-    <div class="detail-body">
-      <div class="detail-stats">
-        <div class="dstat rx">
-          <div class="dstat-label">Download</div>
-          <div class="dstat-value" id="detRx">—</div>
-          <div style="font-size:11px;color:var(--muted)">Mbps</div>
-        </div>
-        <div class="dstat tx">
-          <div class="dstat-label">Upload</div>
-          <div class="dstat-value" id="detTx">—</div>
-          <div style="font-size:11px;color:var(--muted)">Mbps</div>
-        </div>
-        <div class="dstat up">
-          <div class="dstat-label">Uptime</div>
-          <div class="dstat-value" id="detUptime">—</div>
-        </div>
-        <div class="dstat clients">
-          <div class="dstat-label">CPU</div>
-          <div class="dstat-value" id="detCpu">—</div>
-          <div style="font-size:11px;color:var(--muted)">%</div>
-        </div>
-      </div>
-      <div class="chart-box">
-        <div class="chart-box-title">TRÁFICO EN TIEMPO REAL</div>
-        <div style="height:160px;position:relative">
-          <canvas id="detailChart"></canvas>
-        </div>
-      </div>
-      <div class="card" style="margin-bottom:12px">
-        <div class="card-title">Interfaces</div>
-        <div id="ifaceList" style="display:flex;flex-direction:column;gap:8px"></div>
-      </div>
+    <div class="panel-body" id="alertsList">
+      <div class="empty-state"><p>Sin alertas registradas.<br/>Las caídas aparecerán aquí.</p></div>
     </div>
   </div>
 
-  <!-- ══ ADD ROUTER MODAL ══ -->
+  <!-- SETTINGS PANEL -->
+  <div id="panelSettings" class="panel">
+    <div class="panel-header">
+      <div class="back-btn" onclick="closePanel('panelSettings')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#c8deff" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+      </div>
+      <div><div style="font-weight:600;font-size:16px">Ajustes</div></div>
+    </div>
+    <div class="panel-body">
+      <div class="setting-row">
+        <div><div class="setting-label">ISP</div><div class="setting-sub" id="setIspName">—</div></div>
+      </div>
+      <div class="setting-row">
+        <div><div class="setting-label">Email</div><div class="setting-sub" id="setEmail">—</div></div>
+      </div>
+      <div class="setting-row">
+        <div><div class="setting-label">Routers registrados</div></div>
+        <div class="setting-val" id="setRouterCount">0</div>
+      </div>
+      <div class="setting-row">
+        <div><div class="setting-label">Intervalo de polling</div><div class="setting-sub">Actualización automática</div></div>
+        <div class="setting-val">5s</div>
+      </div>
+      <div class="setting-row">
+        <div><div class="setting-label">Licencia</div><div class="setting-sub" id="setLicense">Período de prueba</div></div>
+        <div class="setting-val" id="setDays" style="color:var(--yellow)">30d</div>
+      </div>
+      <button class="btn btn-primary" id="btnUpgrade2" style="margin-top:8px">⚡ ACTIVAR LICENCIA $5</button>
+      <button class="btn btn-danger" onclick="doLogout()" style="margin-top:8px">Cerrar sesión</button>
+      <div style="text-align:center;margin-top:20px;font-size:11px;color:var(--muted)">MikroMon ISP v2.0<br/>© 2025 MikroMon</div>
+    </div>
+  </div>
+
+  <!-- ROUTER DETAIL PANEL -->
+  <div id="panelDetail" class="panel">
+    <div class="panel-header">
+      <div class="back-btn" onclick="closePanel('panelDetail')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#c8deff" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+      </div>
+      <div style="flex:1">
+        <div style="font-weight:600;font-size:16px" id="detailName">Router</div>
+        <div style="font-size:12px;color:var(--muted);font-family:monospace" id="detailIp">—</div>
+        <div style="font-size:11px;color:var(--accent);margin-top:2px" id="detailWan"></div>
+      </div>
+      <div class="status-pill" id="detailStatus">—</div>
+    </div>
+    <div class="panel-body">
+      <div class="detail-stats">
+        <div class="dstat rx"><div class="dstat-label">Download</div><div class="dstat-value" id="detRx">—</div><div style="font-size:11px;color:var(--muted)">Mbps</div></div>
+        <div class="dstat tx"><div class="dstat-label">Upload</div><div class="dstat-value" id="detTx">—</div><div style="font-size:11px;color:var(--muted)">Mbps</div></div>
+        <div class="dstat up"><div class="dstat-label">Uptime</div><div class="dstat-value" id="detUptime">—</div></div>
+        <div class="dstat cpu"><div class="dstat-label">CPU</div><div class="dstat-value" id="detCpu">—</div><div style="font-size:11px;color:var(--muted)">%</div></div>
+      </div>
+      <div class="chart-box">
+        <div class="chart-box-title">TRÁFICO EN TIEMPO REAL</div>
+        <div style="height:160px;position:relative"><canvas id="detailChart"></canvas></div>
+      </div>
+      <div class="card" id="ifaceCard" style="margin-bottom:12px;display:none">
+        <div class="card-title">Interfaces activas</div>
+        <div id="ifaceList" style="display:flex;flex-direction:column;gap:8px"></div>
+      </div>
+      <button class="btn btn-danger" id="btnDeleteRouter">🗑 Eliminar router</button>
+    </div>
+  </div>
+
+  <!-- ADD ROUTER MODAL -->
   <div class="modal" id="addModal">
     <div class="modal-content">
       <div class="modal-handle"></div>
       <div class="modal-title">AGREGAR ROUTER</div>
-      <div class="field">
-        <label>Nombre del sitio</label>
-        <input id="newName" type="text" placeholder="Torre Norte, Nodo Centro..."/>
-      </div>
-      <div class="field">
-        <label>IP Pública</label>
-        <input id="newIp" type="text" placeholder="190.xxx.xxx.xxx" autocorrect="off" spellcheck="false"/>
-      </div>
-      <div class="field">
-        <label>Puerto API</label>
-        <input id="newPort" type="number" value="8728"/>
-      </div>
-      <div class="field">
-        <label>Usuario MikroTik</label>
-        <input id="newUser" type="text" placeholder="admin" autocorrect="off"/>
-      </div>
-      <div class="field">
-        <label>Contraseña</label>
-        <input id="newPass" type="password" placeholder="••••••"/>
-      </div>
-      <div class="field">
-        <label>URL Backend</label>
-        <input id="newBackend" type="url" placeholder="https://tu-app.onrender.com" autocorrect="off"/>
+      <div class="field"><label>Nombre del sitio</label><input id="newName" type="text" placeholder="Torre Norte, Nodo Centro..."/></div>
+      <div class="field"><label>IP Pública</label><input id="newIp" type="text" placeholder="190.xxx.xxx.xxx" autocorrect="off" spellcheck="false"/></div>
+      <div class="field"><label>Puerto API</label><input id="newPort" type="number" value="8728"/></div>
+      <div class="field"><label>Usuario MikroTik</label><input id="newUser" type="text" placeholder="admin" autocorrect="off"/></div>
+      <div class="field"><label>Contraseña</label><input id="newPass" type="password" placeholder="••••••"/></div>
+      <div class="field"><label>URL Backend (Render)</label><input id="newBackend" type="url" placeholder="https://tu-app.onrender.com" autocorrect="off"/></div>
+      <button class="btn btn-outline" id="btnLoadIfaces" style="margin-bottom:10px">🔍 DETECTAR INTERFACES</button>
+      <div id="wanSelectorWrap" style="display:none;margin-bottom:14px">
+        <label>Interface WAN (hacia internet)</label>
+        <div id="wanIfaceList" style="display:flex;flex-direction:column;gap:8px;margin-top:8px"></div>
       </div>
       <button class="btn btn-primary" id="btnSaveRouter" style="margin-bottom:10px">GUARDAR ROUTER</button>
       <button class="btn btn-outline" id="btnCancelModal">Cancelar</button>
@@ -968,76 +395,70 @@
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script>
-// ══════════════════════════════════════════
-//  STATE
-// ══════════════════════════════════════════
+// ── STATE ──
 let user = null;
-let routers = [];        // [{id, name, ip, port, user, pass, backend, status, rx, tx, uptime, cpu}]
+let routers = [];
+let alerts = [];
 let pollTimers = {};
 let detailRouter = null;
 let detailChart = null;
 const rxBuf = Array(30).fill(0);
 const txBuf = Array(30).fill(0);
 
-// ══════════════════════════════════════════
-//  PERSISTENCE
-// ══════════════════════════════════════════
+// ── STORAGE ──
 function save() {
   try { localStorage.setItem('mm_user', JSON.stringify(user)); } catch {}
   try { localStorage.setItem('mm_routers_' + user?.id, JSON.stringify(routers)); } catch {}
+  try { localStorage.setItem('mm_alerts_' + user?.id, JSON.stringify(alerts.slice(0,50))); } catch {}
 }
 
 function load() {
-  try {
-    const u = localStorage.getItem('mm_user');
-    if (u) user = JSON.parse(u);
-  } catch {}
+  try { const u = localStorage.getItem('mm_user'); if (u) user = JSON.parse(u); } catch {}
   if (user) {
-    try {
-      const r = localStorage.getItem('mm_routers_' + user.id);
-      if (r) routers = JSON.parse(r);
-    } catch {}
+    try { const r = localStorage.getItem('mm_routers_' + user.id); if (r) routers = JSON.parse(r); } catch {}
+    try { const a = localStorage.getItem('mm_alerts_' + user.id); if (a) alerts = JSON.parse(a); } catch {}
   }
 }
 
-// ══════════════════════════════════════════
-//  AUTH (local demo — replace with real backend)
-// ══════════════════════════════════════════
+// ── AUTH ──
 document.getElementById('btnRegister').addEventListener('click', () => {
   const name = document.getElementById('regName').value.trim();
   const email = document.getElementById('regEmail').value.trim();
   const pass = document.getElementById('regPass').value;
   const err = document.getElementById('regErr');
   err.style.display = 'none';
-
-  if (!name || !email || pass.length < 6) {
-    err.textContent = 'Completa todos los campos (contraseña mínimo 6 caracteres)';
-    err.style.display = 'block'; return;
-  }
-
+  if (!name || !email || pass.length < 6) { err.textContent = 'Completa todos los campos (contraseña mín. 6 caracteres)'; err.style.display = 'block'; return; }
   user = { id: Date.now().toString(), name, email, created: Date.now() };
-  save();
-  showMain();
+  save(); showMain();
 });
 
 document.getElementById('btnLogin').addEventListener('click', () => {
   const email = document.getElementById('loginEmail').value.trim();
   const err = document.getElementById('loginErr');
   err.style.display = 'none';
-
-  if (!email) { err.textContent = 'Ingresa tu email'; err.style.display = 'block'; return; }
-
-  // Demo: accept any previously registered email
   if (user && user.email === email) { showMain(); return; }
-
-  // Try loading from storage
-  err.textContent = 'Cuenta no encontrada. Regístrate primero.';
-  err.style.display = 'block';
+  err.textContent = 'Cuenta no encontrada. Regístrate primero.'; err.style.display = 'block';
 });
 
-// ══════════════════════════════════════════
-//  NAVIGATION
-// ══════════════════════════════════════════
+function doLogout() {
+  stopAllPolling();
+  user = null;
+  document.getElementById('screenMain').classList.remove('active');
+  document.getElementById('screenLogin').classList.add('active');
+}
+
+// ── NAV TABS ──
+function showTab(tab) {
+  ['navDash','navAlerts','navSettings'].forEach(id => document.getElementById(id).classList.remove('active'));
+  if (tab === 'dash') { document.getElementById('navDash').classList.add('active'); }
+  if (tab === 'alerts') { document.getElementById('navAlerts').classList.add('active'); openPanel('panelAlerts'); renderAlerts(); }
+  if (tab === 'settings') { document.getElementById('navSettings').classList.add('active'); openPanel('panelSettings'); renderSettings(); }
+}
+
+function openPanel(id) { document.getElementById(id).classList.add('open'); }
+function closePanel(id) { document.getElementById(id).classList.remove('open'); }
+
+// ── MAIN ──
 function showMain() {
   document.getElementById('screenLogin').classList.remove('active');
   document.getElementById('screenMain').classList.add('active');
@@ -1045,53 +466,110 @@ function showMain() {
   renderRouterList();
   renderMap();
   startAllPolling();
+  const initial = user.name ? user.name[0].toUpperCase() : 'R';
+  document.getElementById('avatarBtn').textContent = initial;
 }
 
-function showLogin() {
-  document.getElementById('screenMain').classList.remove('active');
-  document.getElementById('screenLogin').classList.add('active');
-  stopAllPolling();
-}
-
-document.getElementById('navLogout').addEventListener('click', () => {
-  user = null;
-  try { localStorage.removeItem('mm_user'); } catch {}
-  showLogin();
-});
-
-// ══════════════════════════════════════════
-//  TRIAL BANNER
-// ══════════════════════════════════════════
 function updateTrialBanner() {
   if (!user) return;
   const daysPassed = Math.floor((Date.now() - user.created) / 86400000);
   const daysLeft = Math.max(0, 30 - daysPassed);
   document.getElementById('trialDaysLeft').textContent = daysLeft + ' días restantes';
-  if (daysLeft === 0) {
-    document.getElementById('trialBanner').style.background = 'linear-gradient(135deg,rgba(255,77,109,0.15),rgba(255,77,109,0.05))';
-    document.getElementById('trialBanner').style.borderColor = 'rgba(255,77,109,0.4)';
-  }
 }
 
-document.getElementById('btnUpgrade').addEventListener('click', () => {
-  alert('Para activar la licencia completa ($5 pago único), ir a Google Play Store y completar la compra desde la app instalada.');
+// ── UPGRADE ──
+[document.getElementById('btnUpgrade'), document.getElementById('btnUpgrade2')].forEach(btn => {
+  if (btn) btn.addEventListener('click', () => alert('Para activar la licencia ($5 pago único), descarga MikroMon desde Google Play Store y completa la compra desde la app instalada.'));
 });
 
-// ══════════════════════════════════════════
-//  ADD ROUTER MODAL
-// ══════════════════════════════════════════
+// ── ADD ROUTER ──
+let selectedWanIface = null;
+let detectedIfaces = [];
+
 document.getElementById('btnAddRouter').addEventListener('click', () => {
+  selectedWanIface = null; detectedIfaces = [];
+  document.getElementById('wanSelectorWrap').style.display = 'none';
   document.getElementById('addModal').classList.add('open');
 });
+document.getElementById('btnCancelModal').addEventListener('click', () => document.getElementById('addModal').classList.remove('open'));
 
-document.getElementById('btnCancelModal').addEventListener('click', () => {
-  document.getElementById('addModal').classList.remove('open');
+// Step 1: Detect interfaces
+document.getElementById('btnLoadIfaces').addEventListener('click', async () => {
+  const btn = document.getElementById('btnLoadIfaces');
+  const err = document.getElementById('modalErr');
+  err.style.display = 'none';
+
+  const tmp = {
+    ip: document.getElementById('newIp').value.trim(),
+    port: parseInt(document.getElementById('newPort').value) || 8728,
+    user: document.getElementById('newUser').value.trim(),
+    pass: document.getElementById('newPass').value,
+    backend: document.getElementById('newBackend').value.trim().replace(/\/$/, '')
+  };
+
+  if (!tmp.ip || !tmp.user || !tmp.backend) {
+    err.textContent = 'Primero completa IP, usuario, contraseña y Backend URL'; err.style.display = 'block'; return;
+  }
+
+  btn.innerHTML = 'DETECTANDO... <span class="loader" style="border-top-color:var(--accent);border-color:var(--border)"></span>';
+  btn.disabled = true;
+
+  try {
+    const res = await fetch(tmp.backend + '/api/interfaces', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ host: tmp.ip, port: tmp.port, user: tmp.user, pass: tmp.pass })
+    });
+    const data = await res.json();
+    if (!data.ok) throw new Error(data.error || 'Error al obtener interfaces');
+
+    detectedIfaces = data.data || [];
+    renderWanSelector(detectedIfaces);
+    document.getElementById('wanSelectorWrap').style.display = 'block';
+  } catch(e) {
+    err.textContent = e.message; err.style.display = 'block';
+  } finally {
+    btn.innerHTML = '🔍 DETECTAR INTERFACES'; btn.disabled = false;
+  }
 });
 
+function renderWanSelector(ifaces) {
+  selectedWanIface = null;
+  const list = document.getElementById('wanIfaceList');
+  // Smart pre-select: prefer pppoe, then ether1, then first
+  const wanCandidates = ifaces.filter(i =>
+    i.name.toLowerCase().includes('pppoe') ||
+    i.name.toLowerCase().includes('wan') ||
+    i.name === 'ether1'
+  );
+  const preselect = wanCandidates[0] || ifaces[0];
+  if (preselect) selectedWanIface = preselect.name;
+
+  list.innerHTML = ifaces.map(i => `
+    <div class="iface-option ${i.name === selectedWanIface ? 'selected' : ''}" onclick="selectWan('${i.name}', this)">
+      <div class="iface-radio"></div>
+      <div>
+        <div class="iface-option-name">${i.name}</div>
+        <div class="iface-option-type">${i.type || 'ethernet'} ${i.running==='true'||i.running===true ? '● activa' : '○ inactiva'}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function selectWan(name, el) {
+  selectedWanIface = name;
+  document.querySelectorAll('.iface-option').forEach(e => e.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
+// Step 2: Save router
 document.getElementById('btnSaveRouter').addEventListener('click', async () => {
   const btn = document.getElementById('btnSaveRouter');
   const err = document.getElementById('modalErr');
   err.style.display = 'none';
+
+  if (!selectedWanIface) {
+    err.textContent = 'Primero detecta las interfaces y selecciona la WAN'; err.style.display = 'block'; return;
+  }
 
   const r = {
     id: Date.now().toString(),
@@ -1101,71 +579,46 @@ document.getElementById('btnSaveRouter').addEventListener('click', async () => {
     user: document.getElementById('newUser').value.trim(),
     pass: document.getElementById('newPass').value,
     backend: document.getElementById('newBackend').value.trim().replace(/\/$/, ''),
-    status: 'checking',
-    rx: 0, tx: 0, uptime: '—', cpu: '—',
+    wanIface: selectedWanIface,
+    status: 'checking', rxMbps: 0, txMbps: 0,
     prevRx: null, prevTx: null, prevTs: null,
-    rxMbps: 0, txMbps: 0,
+    uptime: '—', cpu: '—', ifaces: []
   };
 
   if (!r.name || !r.ip || !r.user || !r.backend) {
-    err.textContent = 'Completa nombre, IP, usuario y backend URL';
-    err.style.display = 'block'; return;
+    err.textContent = 'Completa nombre, IP, usuario y backend URL'; err.style.display = 'block'; return;
   }
 
-  btn.innerHTML = 'PROBANDO CONEXIÓN <span class="loader"></span>';
-  btn.disabled = true;
+  btn.innerHTML = 'GUARDANDO... <span class="loader"></span>'; btn.disabled = true;
 
   try {
-    const res = await apiCall(r, '/api/connect', {});
-    if (!res.ok) throw new Error(res.error || 'Sin conexión');
     r.status = 'online';
-    routers.push(r);
-    save();
+    routers.push(r); save();
     document.getElementById('addModal').classList.remove('open');
-    renderRouterList();
-    renderMap();
+    clearModal();
+    renderRouterList(); renderMap(); updateSummary();
     startPolling(r);
-    clearInputs();
-  } catch(e) {
-    err.textContent = e.message;
-    err.style.display = 'block';
-  } finally {
-    btn.innerHTML = 'GUARDAR ROUTER';
-    btn.disabled = false;
-  }
+  } catch(e) { err.textContent = e.message; err.style.display = 'block'; }
+  finally { btn.innerHTML = 'GUARDAR ROUTER'; btn.disabled = false; }
 });
 
-function clearInputs() {
-  ['newName','newIp','newPort','newUser','newPass','newBackend'].forEach(id => {
-    const el = document.getElementById(id);
-    if (id === 'newPort') el.value = '8728';
-    else el.value = '';
-  });
+function clearModal() {
+  ['newName','newIp','newUser','newPass','newBackend'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('newPort').value = '8728';
 }
 
-// ══════════════════════════════════════════
-//  API
-// ══════════════════════════════════════════
+// ── API ──
 async function apiCall(r, endpoint, body) {
   const res = await fetch(r.backend + endpoint, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ host: r.ip, port: r.port, user: r.user, pass: r.pass, ...body })
   });
   return res.json();
 }
 
-// ══════════════════════════════════════════
-//  POLLING
-// ══════════════════════════════════════════
-function startAllPolling() {
-  routers.forEach(r => startPolling(r));
-}
-
-function stopAllPolling() {
-  Object.values(pollTimers).forEach(t => clearInterval(t));
-  pollTimers = {};
-}
+// ── POLLING ──
+function startAllPolling() { routers.forEach(r => startPolling(r)); }
+function stopAllPolling() { Object.values(pollTimers).forEach(t => clearInterval(t)); pollTimers = {}; }
 
 function startPolling(r) {
   if (pollTimers[r.id]) clearInterval(pollTimers[r.id]);
@@ -1174,174 +627,206 @@ function startPolling(r) {
 }
 
 async function pollOnce(r) {
+  const wasOnline = r.status === 'online';
   try {
-    const res = await apiCall(r, '/api/traffic', { interface: 'ether1' });
-    if (!res.ok) throw new Error();
+    // Use only the selected WAN interface
+    const wanIface = r.wanIface || 'ether1';
+    const t = await apiCall(r, '/api/traffic', { interface: wanIface });
+    if (!t.ok) throw new Error('no data');
 
-    const d = res.data;
-    const ts = res.timestamp;
-    const rx = parseInt(d['rx-byte'] || 0);
-    const tx = parseInt(d['tx-byte'] || 0);
+    const totalRx = parseInt(t.data['rx-byte'] || 0);
+    const totalTx = parseInt(t.data['tx-byte'] || 0);
+    const ts = Date.now();
 
     if (r.prevRx !== null) {
       const dt = (ts - r.prevTs) / 1000;
-      r.rxMbps = parseFloat(Math.max(0, (rx - r.prevRx) * 8 / dt / 1e6).toFixed(2));
-      r.txMbps = parseFloat(Math.max(0, (tx - r.prevTx) * 8 / dt / 1e6).toFixed(2));
+      r.rxMbps = parseFloat(Math.max(0, (totalRx - r.prevRx) * 8 / dt / 1e6).toFixed(2));
+      r.txMbps = parseFloat(Math.max(0, (totalTx - r.prevTx) * 8 / dt / 1e6).toFixed(2));
     }
+    r.prevRx = totalRx; r.prevTx = totalTx; r.prevTs = ts;
 
-    r.prevRx = rx; r.prevTx = tx; r.prevTs = ts;
-    r.rx = rx; r.tx = tx;
-    r.status = 'online';
-
-    // Uptime & CPU via system resource
+    // Also load all interfaces for detail view (display only)
     try {
-      const sysRes = await apiCall(r, '/api/connect', {});
-      if (sysRes.ok && sysRes.data) {
-        r.uptime = formatUptime(sysRes.data.uptime || '');
-        r.cpu = sysRes.data['cpu-load'] || '—';
+      const ifRes = await apiCall(r, '/api/interfaces', {});
+      if (ifRes.ok) r.ifaces = ifRes.data || [];
+    } catch {}
+
+    // System info
+    try {
+      const sys = await apiCall(r, '/api/connect', {});
+      if (sys.ok && sys.data) {
+        r.uptime = formatUptime(sys.data.uptime || '');
+        r.cpu = sys.data['cpu-load'] || '—';
       }
     } catch {}
+
+    r.status = 'online';
+    if (!wasOnline) addAlert(r, 'online');
 
   } catch {
     r.status = 'offline';
     r.rxMbps = 0; r.txMbps = 0;
+    if (wasOnline) addAlert(r, 'offline');
   }
 
+  save();
   updateRouterCard(r);
   updateSummary();
   updateMap();
-
-  if (detailRouter && detailRouter.id === r.id) updateDetail(r);
+  if (detailRouter?.id === r.id) updateDetail(r);
 }
 
 function formatUptime(s) {
   if (!s) return '—';
   const m = s.match(/(\d+)w.*?(\d+)d.*?(\d+)h/);
-  if (m) return `${m[1]}s ${m[2]}d ${m[3]}h`;
+  if (m) return `${m[1]}s${m[2]}d${m[3]}h`;
   const m2 = s.match(/(\d+)d.*?(\d+)h/);
   if (m2) return `${m2[1]}d ${m2[2]}h`;
-  return s.slice(0, 8);
+  return s.slice(0,10);
 }
 
-// ══════════════════════════════════════════
-//  RENDER
-// ══════════════════════════════════════════
+// ── ALERTS ──
+function addAlert(r, type) {
+  const a = {
+    id: Date.now().toString(),
+    routerName: r.name,
+    type,
+    msg: type === 'offline' ? 'Router caído — sin respuesta' : 'Router restaurado — en línea',
+    time: new Date().toLocaleTimeString('es', { hour:'2-digit', minute:'2-digit', second:'2-digit' }),
+    date: new Date().toLocaleDateString('es')
+  };
+  alerts.unshift(a);
+  document.getElementById('notifDot').style.display = 'block';
+  save();
+}
+
+function renderAlerts() {
+  const el = document.getElementById('alertsList');
+  if (alerts.length === 0) {
+    el.innerHTML = '<div class="empty-state"><p>Sin alertas registradas.<br/>Las caídas y restauraciones aparecerán aquí.</p></div>';
+    return;
+  }
+  el.innerHTML = alerts.map(a => `
+    <div class="alert-item">
+      <div class="alert-dot ${a.type === 'offline' ? 'red' : 'green'}"></div>
+      <div>
+        <div class="alert-name">${a.routerName}</div>
+        <div class="alert-msg">${a.msg}</div>
+        <div class="alert-time">${a.date} ${a.time}</div>
+      </div>
+    </div>
+  `).join('');
+  document.getElementById('notifDot').style.display = 'none';
+}
+
+// ── SETTINGS ──
+function renderSettings() {
+  if (!user) return;
+  document.getElementById('setIspName').textContent = user.name || '—';
+  document.getElementById('setEmail').textContent = user.email || '—';
+  document.getElementById('setRouterCount').textContent = routers.length;
+  const daysPassed = Math.floor((Date.now() - user.created) / 86400000);
+  const daysLeft = Math.max(0, 30 - daysPassed);
+  document.getElementById('setDays').textContent = daysLeft + 'd';
+  document.getElementById('setLicense').textContent = daysLeft > 0 ? 'Período de prueba' : 'Expirado — activa tu licencia';
+}
+
+// ── RENDER LIST ──
 function renderRouterList() {
   const list = document.getElementById('routerList');
   if (routers.length === 0) {
     list.innerHTML = `<div class="empty-state">
-      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#4a6899" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/><path d="M7 7h.01M11 7h.01"/></svg>
-      <p>No hay routers.<br/>Toca "Agregar" para comenzar.</p>
-    </div>`;
+      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#4a6899" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+      <p>No hay routers.<br/>Toca "+ Agregar" para comenzar.</p></div>`;
     return;
   }
+  list.innerHTML = routers.map(r => routerCardHTML(r)).join('');
+}
 
-  list.innerHTML = routers.map(r => `
-    <div class="router-card ${r.status}" id="card-${r.id}" onclick="openDetail('${r.id}')">
-      <div class="router-icon">
-        ${routerSVG(r.status)}
-      </div>
-      <div class="router-info">
-        <div class="router-name">${r.name}</div>
-        <div class="router-ip">${r.ip}:${r.port}</div>
-        <div class="router-stats">
-          <span class="rstat">↓ ${r.rxMbps || 0} M</span>
-          <span class="rstat" style="color:var(--accent2)">↑ ${r.txMbps || 0} M</span>
-        </div>
-      </div>
-      <div class="router-status">
-        <div class="status-pill">${r.status === 'online' ? 'Online' : r.status === 'offline' ? 'Caído' : '...'}</div>
-        ${r.status === 'online' ? '<div class="pulse"></div>' : ''}
+function routerCardHTML(r) {
+  const color = r.status==='online'?'#00ff88':r.status==='offline'?'#ff4d6d':'#ffd60a';
+  const label = r.status==='online'?'ONLINE':r.status==='offline'?'CAÍDO':'...';
+  return `<div class="router-card ${r.status}" id="card-${r.id}" onclick="openDetail('${r.id}')">
+    <div class="router-icon">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/><path d="M7 7h.01M11 7h.01"/></svg>
+    </div>
+    <div class="router-info">
+      <div class="router-name">${r.name}</div>
+      <div class="router-ip">${r.ip}:${r.port}</div>
+      <div class="router-stats">
+        <span class="rstat">↓ ${r.rxMbps||0} M</span>
+        <span class="rstat tx">↑ ${r.txMbps||0} M</span>
       </div>
     </div>
-  `).join('');
+    <div class="router-status">
+      <div class="status-pill">${label}</div>
+      ${r.status==='online'?'<div class="pulse"></div>':''}
+    </div>
+  </div>`;
 }
 
 function updateRouterCard(r) {
   const card = document.getElementById('card-' + r.id);
   if (!card) { renderRouterList(); return; }
-  card.className = 'router-card ' + r.status;
-  card.querySelector('.router-stats').innerHTML = `
-    <span class="rstat">↓ ${r.rxMbps || 0} M</span>
-    <span class="rstat" style="color:var(--accent2)">↑ ${r.txMbps || 0} M</span>
-  `;
-  card.querySelector('.status-pill').textContent = r.status === 'online' ? 'Online' : r.status === 'offline' ? 'Caído' : '...';
-}
-
-function routerSVG(status) {
-  const color = status === 'online' ? '#00ff88' : status === 'offline' ? '#ff4d6d' : '#ffd60a';
-  return `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2">
-    <rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/><path d="M7 7h.01M11 7h.01"/>
-  </svg>`;
+  card.outerHTML = routerCardHTML(r);
+  // Re-bind click
+  const newCard = document.getElementById('card-' + r.id);
+  if (newCard) newCard.onclick = () => openDetail(r.id);
 }
 
 function updateSummary() {
-  const online = routers.filter(r => r.status === 'online').length;
-  const offline = routers.filter(r => r.status === 'offline').length;
+  const online = routers.filter(r => r.status==='online').length;
+  const offline = routers.filter(r => r.status==='offline').length;
   document.getElementById('countOnline').textContent = online;
   document.getElementById('countOffline').textContent = offline;
   document.getElementById('countTotal').textContent = routers.length;
-
-  // Show alert dot if any offline
-  document.getElementById('notifDot').style.display = offline > 0 ? 'block' : 'none';
 }
 
-// ══════════════════════════════════════════
-//  NETWORK MAP
-// ══════════════════════════════════════════
-function renderMap() {
-  updateMap();
-}
-
+// ── MAP ──
+function renderMap() { updateMap(); }
 function updateMap() {
   const g = document.getElementById('routerNodes');
   if (!g) return;
-
-  const cx = 180, cy = 130;
-  const count = routers.length;
-  if (count === 0) { g.innerHTML = ''; return; }
-
-  const radius = Math.min(90, 50 + count * 5);
-  g.innerHTML = routers.map((r, i) => {
-    const angle = (i / count) * 2 * Math.PI - Math.PI / 2;
-    const x = cx + radius * Math.cos(angle);
-    const y = cy + radius * Math.sin(angle);
-    const color = r.status === 'online' ? '#00ff88' : r.status === 'offline' ? '#ff4d6d' : '#ffd60a';
-    const label = r.name.length > 8 ? r.name.slice(0, 8) + '…' : r.name;
-
+  const cx=180, cy=120, count=routers.length;
+  if (!count) { g.innerHTML=''; return; }
+  const radius = Math.min(85, 45 + count*6);
+  g.innerHTML = routers.map((r,i) => {
+    const angle = (i/count)*2*Math.PI - Math.PI/2;
+    const x = cx + radius*Math.cos(angle);
+    const y = cy + radius*Math.sin(angle);
+    const color = r.status==='online'?'#00ff88':r.status==='offline'?'#ff4d6d':'#ffd60a';
+    const lbl = r.name.length>5 ? r.name.slice(0,4)+'…' : r.name;
     return `
-      <line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" stroke="${color}" stroke-width="1" stroke-opacity="0.3" stroke-dasharray="4,4"/>
-      <circle cx="${x}" cy="${y}" r="12" fill="rgba(${r.status==='online'?'0,255,136':'255,77,109'},0.1)" stroke="${color}" stroke-width="1.5" filter="url(#glow)" onclick="openDetail('${r.id}')" style="cursor:pointer"/>
-      <text x="${x}" y="${y+4}" text-anchor="middle" fill="${color}" font-size="7" font-family="Orbitron">${label.slice(0,4)}</text>
-      ${r.status==='online'?`<circle cx="${x}" cy="${y}" r="16" fill="none" stroke="${color}" stroke-width="1" stroke-opacity="0.3"><animate attributeName="r" values="12;20;12" dur="3s" repeatCount="indefinite"/><animate attributeName="stroke-opacity" values="0.3;0;0.3" dur="3s" repeatCount="indefinite"/></circle>`:''}
+      <line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" stroke="${color}" stroke-width="1" stroke-opacity=".3" stroke-dasharray="4,4"/>
+      <circle cx="${x}" cy="${y}" r="13" fill="${r.status==='online'?'rgba(0,255,136,.1)':'rgba(255,77,109,.1)'}" stroke="${color}" stroke-width="1.5" filter="url(#glow)" onclick="openDetail('${r.id}')" style="cursor:pointer"/>
+      <text x="${x}" y="${y+4}" text-anchor="middle" fill="${color}" font-size="7" font-family="Orbitron">${lbl}</text>
+      ${r.status==='online'?`<circle cx="${x}" cy="${y}" r="13" fill="none" stroke="${color}" stroke-width="1" stroke-opacity=".3"><animate attributeName="r" values="13;22;13" dur="3s" repeatCount="indefinite"/><animate attributeName="stroke-opacity" values=".3;0;.3" dur="3s" repeatCount="indefinite"/></circle>`:''}
     `;
   }).join('');
 }
 
-// ══════════════════════════════════════════
-//  DETAIL PANEL
-// ══════════════════════════════════════════
+// ── DETAIL ──
 function openDetail(id) {
-  detailRouter = routers.find(r => r.id === id);
+  detailRouter = routers.find(r => r.id===id);
   if (!detailRouter) return;
-
   document.getElementById('detailName').textContent = detailRouter.name;
-  document.getElementById('detailIp').textContent = detailRouter.ip + ':' + detailRouter.port;
-  document.getElementById('detailStatus').textContent = detailRouter.status === 'online' ? 'Online' : 'Caído';
-  document.getElementById('detailStatus').className = 'status-pill';
-
-  // Reset chart buffers
+  document.getElementById('detailIp').textContent = detailRouter.ip+':'+detailRouter.port;
+  document.getElementById('detailWan').textContent = detailRouter.wanIface ? '⟶ WAN: ' + detailRouter.wanIface : '';
+  document.getElementById('detailStatus').textContent = detailRouter.status==='online'?'Online':'Caído';
   rxBuf.fill(0); txBuf.fill(0);
   initDetailChart();
   updateDetail(detailRouter);
-
-  document.getElementById('detailPanel').classList.add('open');
+  openPanel('panelDetail');
 }
 
-document.getElementById('btnBack').addEventListener('click', () => {
-  document.getElementById('detailPanel').classList.remove('open');
-  detailRouter = null;
-  if (detailChart) { detailChart.destroy(); detailChart = null; }
+document.getElementById('btnDeleteRouter').addEventListener('click', () => {
+  if (!detailRouter) return;
+  if (!confirm('¿Eliminar ' + detailRouter.name + '?')) return;
+  clearInterval(pollTimers[detailRouter.id]);
+  delete pollTimers[detailRouter.id];
+  routers = routers.filter(r => r.id !== detailRouter.id);
+  save(); renderRouterList(); renderMap(); updateSummary();
+  closePanel('panelDetail'); detailRouter = null;
 });
 
 function updateDetail(r) {
@@ -1350,42 +835,63 @@ function updateDetail(r) {
   document.getElementById('detUptime').textContent = r.uptime || '—';
   document.getElementById('detCpu').textContent = r.cpu || '—';
 
+  // Interfaces list
+  if (r.ifaces && r.ifaces.length > 0) {
+    document.getElementById('ifaceCard').style.display = 'block';
+    document.getElementById('ifaceList').innerHTML = r.ifaces.map(i => `
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border)">
+        <div>
+          <div style="font-size:13px;font-weight:600">${i.name}</div>
+          <div style="font-size:11px;color:var(--muted)">${i.type||'ethernet'}</div>
+        </div>
+        <div style="text-align:right">
+          <div style="font-size:11px;color:var(--accent)">↓ ${fmtBytes(i['rx-byte'])}</div>
+          <div style="font-size:11px;color:var(--accent2)">↑ ${fmtBytes(i['tx-byte'])}</div>
+        </div>
+      </div>
+    `).join('');
+  }
+
   if (detailChart) {
-    rxBuf.push(r.rxMbps || 0); rxBuf.shift();
-    txBuf.push(r.txMbps || 0); txBuf.shift();
+    rxBuf.push(r.rxMbps||0); rxBuf.shift();
+    txBuf.push(r.txMbps||0); txBuf.shift();
     detailChart.data.datasets[0].data = [...rxBuf];
     detailChart.data.datasets[1].data = [...txBuf];
     detailChart.update('none');
   }
 }
 
+function fmtBytes(b) {
+  const n = parseInt(b||0);
+  if (n>1e9) return (n/1e9).toFixed(1)+'GB';
+  if (n>1e6) return (n/1e6).toFixed(1)+'MB';
+  return (n/1e3).toFixed(0)+'KB';
+}
+
 function initDetailChart() {
-  if (detailChart) detailChart.destroy();
+  if (detailChart) { detailChart.destroy(); detailChart=null; }
   const ctx = document.getElementById('detailChart').getContext('2d');
   detailChart = new Chart(ctx, {
     type: 'line',
     data: {
       labels: Array(30).fill(''),
       datasets: [
-        { label: 'RX', data: [...rxBuf], borderColor: '#00c8ff', backgroundColor: 'rgba(0,200,255,0.08)', borderWidth: 2, pointRadius: 0, fill: true, tension: 0.4 },
-        { label: 'TX', data: [...txBuf], borderColor: '#ff4d6d', backgroundColor: 'rgba(255,77,109,0.08)', borderWidth: 2, pointRadius: 0, fill: true, tension: 0.4 },
+        { label:'RX', data:[...rxBuf], borderColor:'#00c8ff', backgroundColor:'rgba(0,200,255,.08)', borderWidth:2, pointRadius:0, fill:true, tension:.4 },
+        { label:'TX', data:[...txBuf], borderColor:'#ff4d6d', backgroundColor:'rgba(255,77,109,.08)', borderWidth:2, pointRadius:0, fill:true, tension:.4 }
       ]
     },
     options: {
-      responsive: true, maintainAspectRatio: false,
-      animation: { duration: 300 },
-      plugins: { legend: { display: false } },
-      scales: {
-        x: { display: false },
-        y: { min: 0, grid: { color: 'rgba(26,48,96,0.8)' }, ticks: { color: '#4a6899', font: { size: 10 }, callback: v => v + 'M' } }
+      responsive:true, maintainAspectRatio:false, animation:{duration:300},
+      plugins:{legend:{display:false}},
+      scales:{
+        x:{display:false},
+        y:{min:0, grid:{color:'rgba(26,48,96,.8)'}, ticks:{color:'#4a6899',font:{size:10},callback:v=>v+'M'}}
       }
     }
   });
 }
 
-// ══════════════════════════════════════════
-//  BOOT
-// ══════════════════════════════════════════
+// ── BOOT ──
 load();
 if (user) showMain();
 </script>
