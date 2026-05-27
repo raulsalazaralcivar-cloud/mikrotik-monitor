@@ -4,428 +4,704 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
   <meta name="apple-mobile-web-app-capable" content="yes"/>
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
-  <meta name="apple-mobile-web-app-title" content="MikroMon"/>
-  <meta name="theme-color" content="#0a0e1a"/>
-  <title>MikroMon</title>
-  <link rel="apple-touch-icon" href="icon.png"/>
-  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Exo+2:wght@300;600;800&display=swap" rel="stylesheet"/>
+  <meta name="apple-mobile-web-app-title" content="MikroMon ISP"/>
+  <meta name="theme-color" content="#060d1f"/>
+  <title>MikroMon ISP</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
   <style>
     :root {
-      --bg: #0a0e1a;
-      --surface: #111827;
-      --border: #1e2d45;
-      --accent: #00d4ff;
-      --accent2: #ff6b35;
+      --bg: #060d1f;
+      --bg2: #0a1628;
+      --surface: #0f1f3d;
+      --border: #1a3060;
+      --accent: #00c8ff;
+      --accent2: #ff4d6d;
       --green: #00ff88;
-      --text: #c8d8e8;
-      --muted: #4a6080;
-      --font-mono: 'Share Tech Mono', monospace;
-      --font-main: 'Exo 2', sans-serif;
+      --yellow: #ffd60a;
+      --text: #c8deff;
+      --muted: #4a6899;
+      --font-head: 'Orbitron', monospace;
+      --font-body: 'Inter', sans-serif;
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 
     body {
       background: var(--bg);
       color: var(--text);
-      font-family: var(--font-main);
+      font-family: var(--font-body);
       min-height: 100vh;
-      min-height: -webkit-fill-available;
       overflow-x: hidden;
     }
 
-    /* Grid background */
+    /* Animated background */
     body::before {
       content: '';
       position: fixed;
       inset: 0;
-      background-image:
-        linear-gradient(rgba(0,212,255,0.03) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(0,212,255,0.03) 1px, transparent 1px);
-      background-size: 40px 40px;
+      background:
+        radial-gradient(ellipse 80% 50% at 50% -20%, rgba(0,200,255,0.07) 0%, transparent 60%),
+        linear-gradient(rgba(0,200,255,0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,200,255,0.02) 1px, transparent 1px);
+      background-size: 100% 100%, 50px 50px, 50px 50px;
       pointer-events: none;
       z-index: 0;
     }
 
-    #app { position: relative; z-index: 1; padding: env(safe-area-inset-top, 0) 0 env(safe-area-inset-bottom, 0); }
+    #app { position: relative; z-index: 1; }
 
-    /* ─── Header ─── */
-    header {
-      display: flex;
+    /* ── SCREENS ── */
+    .screen { display: none; min-height: 100vh; }
+    .screen.active { display: flex; flex-direction: column; }
+
+    /* ══════════════════════════════
+       LOGIN SCREEN
+    ══════════════════════════════ */
+    #screenLogin {
       align-items: center;
-      justify-content: space-between;
-      padding: 16px 20px 12px;
-      border-bottom: 1px solid var(--border);
-      background: linear-gradient(180deg, rgba(0,212,255,0.05) 0%, transparent 100%);
+      justify-content: center;
+      padding: 24px;
     }
 
-    .logo {
-      display: flex;
-      align-items: center;
-      gap: 10px;
+    .login-wrap {
+      width: 100%;
+      max-width: 380px;
     }
 
-    .logo-icon {
-      width: 36px; height: 36px;
+    .brand {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .brand-icon {
+      width: 72px; height: 72px;
       border: 2px solid var(--accent);
-      border-radius: 8px;
+      border-radius: 16px;
       display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 16px;
       position: relative;
       overflow: hidden;
+      background: rgba(0,200,255,0.05);
     }
 
-    .logo-icon::after {
+    .brand-icon::after {
       content: '';
       position: absolute;
-      width: 100%; height: 2px;
-      background: var(--accent);
-      animation: scan 2s linear infinite;
+      width: 100%; height: 3px;
+      background: linear-gradient(90deg, transparent, var(--accent), transparent);
+      animation: scanH 2s linear infinite;
     }
 
-    @keyframes scan {
-      0% { top: -2px; } 100% { top: 100%; }
-    }
+    @keyframes scanH { 0% { top: -3px; } 100% { top: 100%; } }
 
-    .logo-icon svg { z-index: 1; }
-
-    .logo h1 {
-      font-size: 20px;
-      font-weight: 800;
-      letter-spacing: 2px;
+    .brand h1 {
+      font-family: var(--font-head);
+      font-size: 28px;
+      font-weight: 900;
       color: var(--accent);
+      letter-spacing: 4px;
+    }
+
+    .brand p {
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      margin-top: 4px;
+    }
+
+    .trial-badge {
+      display: inline-block;
+      background: linear-gradient(135deg, var(--yellow), #ff8c00);
+      color: #000;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      padding: 4px 12px;
+      border-radius: 20px;
+      margin-top: 10px;
       text-transform: uppercase;
     }
 
-    .logo span {
-      font-size: 10px;
-      font-family: var(--font-mono);
-      color: var(--muted);
-      display: block;
-      letter-spacing: 1px;
-    }
-
-    .status-dot {
-      width: 10px; height: 10px;
-      border-radius: 50%;
-      background: var(--muted);
-      box-shadow: 0 0 0 3px rgba(74,96,128,0.2);
-      transition: all 0.3s;
-    }
-    .status-dot.online {
-      background: var(--green);
-      box-shadow: 0 0 0 3px rgba(0,255,136,0.2), 0 0 12px rgba(0,255,136,0.5);
-      animation: pulse-dot 2s ease-in-out infinite;
-    }
-    @keyframes pulse-dot {
-      0%,100% { box-shadow: 0 0 0 3px rgba(0,255,136,0.2), 0 0 12px rgba(0,255,136,0.4); }
-      50% { box-shadow: 0 0 0 6px rgba(0,255,136,0.1), 0 0 20px rgba(0,255,136,0.6); }
-    }
-
-    /* ─── Screens ─── */
-    .screen { display: none; padding: 20px; }
-    .screen.active { display: block; }
-
-    /* ─── Config form ─── */
-    .config-card {
+    .card {
       background: var(--surface);
       border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 24px;
+      border-radius: 20px;
+      padding: 28px;
       margin-bottom: 16px;
     }
 
-    .config-card h2 {
-      font-size: 13px;
-      font-family: var(--font-mono);
+    .card-title {
+      font-family: var(--font-head);
+      font-size: 11px;
       color: var(--accent);
-      letter-spacing: 2px;
+      letter-spacing: 3px;
       text-transform: uppercase;
       margin-bottom: 20px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
     }
 
-    .config-card h2::before {
-      content: '//';
-      color: var(--muted);
-    }
-
-    .field {
-      margin-bottom: 14px;
-    }
+    .field { margin-bottom: 14px; }
 
     label {
       display: block;
       font-size: 11px;
-      font-family: var(--font-mono);
       color: var(--muted);
       letter-spacing: 1px;
-      margin-bottom: 6px;
       text-transform: uppercase;
+      margin-bottom: 6px;
     }
 
-    input, select {
+    input[type=text], input[type=email], input[type=password], input[type=number], input[type=url] {
       width: 100%;
       background: var(--bg);
       border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 12px 14px;
+      border-radius: 10px;
+      padding: 13px 16px;
       color: var(--text);
-      font-family: var(--font-mono);
+      font-family: var(--font-body);
       font-size: 15px;
       outline: none;
       transition: border-color 0.2s, box-shadow 0.2s;
       -webkit-appearance: none;
     }
 
-    input:focus, select:focus {
+    input:focus {
       border-color: var(--accent);
-      box-shadow: 0 0 0 3px rgba(0,212,255,0.1);
+      box-shadow: 0 0 0 3px rgba(0,200,255,0.1);
     }
 
     input::placeholder { color: var(--muted); }
 
     .btn {
       width: 100%;
-      padding: 14px;
+      padding: 15px;
       border: none;
-      border-radius: 10px;
-      font-family: var(--font-main);
+      border-radius: 12px;
+      font-family: var(--font-body);
       font-size: 15px;
       font-weight: 600;
       letter-spacing: 1px;
       cursor: pointer;
       transition: all 0.2s;
-      position: relative;
-      overflow: hidden;
     }
 
     .btn-primary {
-      background: linear-gradient(135deg, var(--accent) 0%, #0098c8 100%);
+      background: linear-gradient(135deg, var(--accent) 0%, #0090c0 100%);
       color: #000;
     }
 
-    .btn-primary:active { transform: scale(0.98); opacity: 0.9; }
+    .btn-primary:active { transform: scale(0.98); }
 
-    .btn-secondary {
+    .btn-outline {
       background: transparent;
       border: 1px solid var(--border);
       color: var(--muted);
       font-size: 13px;
-      padding: 10px;
+      padding: 11px;
       margin-top: 8px;
     }
 
-    .error-msg {
-      background: rgba(255,60,60,0.1);
-      border: 1px solid rgba(255,60,60,0.3);
-      border-radius: 8px;
+    .err {
+      background: rgba(255,77,109,0.1);
+      border: 1px solid rgba(255,77,109,0.3);
+      border-radius: 10px;
       padding: 12px;
-      font-family: var(--font-mono);
       font-size: 13px;
-      color: #ff6b6b;
+      color: var(--accent2);
       margin-top: 12px;
       display: none;
     }
 
-    /* ─── Dashboard ─── */
-    .stats-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      margin-bottom: 16px;
+    /* ══════════════════════════════
+       MAIN APP
+    ══════════════════════════════ */
+    /* Header */
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 16px 10px;
+      border-bottom: 1px solid var(--border);
+      background: rgba(6,13,31,0.95);
+      backdrop-filter: blur(10px);
+      position: sticky;
+      top: 0;
+      z-index: 100;
     }
 
-    .stat-card {
+    .header-logo {
+      font-family: var(--font-head);
+      font-size: 16px;
+      font-weight: 900;
+      color: var(--accent);
+      letter-spacing: 3px;
+    }
+
+    .header-logo span {
+      font-size: 9px;
+      color: var(--muted);
+      display: block;
+      letter-spacing: 2px;
+    }
+
+    .header-right { display: flex; align-items: center; gap: 12px; }
+
+    .notif-btn {
+      width: 36px; height: 36px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .notif-dot {
+      position: absolute;
+      top: 6px; right: 6px;
+      width: 8px; height: 8px;
+      background: var(--accent2);
+      border-radius: 50%;
+      border: 2px solid var(--bg);
+    }
+
+    .avatar {
+      width: 36px; height: 36px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--accent), #0060a0);
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700;
+      font-size: 14px;
+      color: #000;
+      cursor: pointer;
+    }
+
+    /* Summary bar */
+    .summary {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      padding: 14px 16px;
+    }
+
+    .sum-card {
       background: var(--surface);
       border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 16px;
+      border-radius: 14px;
+      padding: 14px 12px;
+      text-align: center;
       position: relative;
       overflow: hidden;
     }
 
-    .stat-card::before {
+    .sum-card::before {
       content: '';
       position: absolute;
       top: 0; left: 0; right: 0;
       height: 2px;
     }
 
-    .stat-card.down::before { background: var(--accent); }
-    .stat-card.up::before { background: var(--accent2); }
+    .sum-card.online::before { background: var(--green); }
+    .sum-card.offline::before { background: var(--accent2); }
+    .sum-card.total::before { background: var(--accent); }
 
-    .stat-label {
+    .sum-num {
+      font-family: var(--font-head);
+      font-size: 26px;
+      font-weight: 700;
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+
+    .sum-card.online .sum-num { color: var(--green); }
+    .sum-card.offline .sum-num { color: var(--accent2); }
+    .sum-card.total .sum-num { color: var(--accent); }
+
+    .sum-label {
       font-size: 10px;
-      font-family: var(--font-mono);
       color: var(--muted);
       letter-spacing: 1px;
       text-transform: uppercase;
-      margin-bottom: 8px;
-      display: flex;
-      align-items: center;
-      gap: 5px;
     }
 
-    .stat-label svg { opacity: 0.7; }
-
-    .stat-value {
-      font-size: 22px;
-      font-weight: 800;
-      line-height: 1;
-      margin-bottom: 2px;
+    /* Map area */
+    .map-section {
+      padding: 0 16px 12px;
     }
 
-    .stat-card.down .stat-value { color: var(--accent); }
-    .stat-card.up .stat-value { color: var(--accent2); }
-
-    .stat-unit {
-      font-size: 11px;
-      color: var(--muted);
-      font-family: var(--font-mono);
-    }
-
-    /* ─── Chart ─── */
-    .chart-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 20px;
-      margin-bottom: 16px;
-    }
-
-    .chart-header {
+    .section-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 16px;
+      margin-bottom: 12px;
     }
 
-    .chart-title {
-      font-size: 12px;
-      font-family: var(--font-mono);
+    .section-title {
+      font-family: var(--font-head);
+      font-size: 11px;
       color: var(--accent);
       letter-spacing: 2px;
       text-transform: uppercase;
     }
 
-    .chart-legend {
+    .add-btn {
       display: flex;
-      gap: 12px;
+      align-items: center;
+      gap: 5px;
+      background: rgba(0,200,255,0.1);
+      border: 1px solid rgba(0,200,255,0.3);
+      border-radius: 20px;
+      padding: 6px 14px;
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
     }
 
-    .legend-item {
+    /* Network map canvas */
+    .map-canvas {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      height: 260px;
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 16px;
+    }
+
+    .map-canvas svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    .map-overlay {
+      position: absolute;
+      top: 10px; right: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .map-legend {
       display: flex;
       align-items: center;
       gap: 5px;
       font-size: 10px;
-      font-family: var(--font-mono);
       color: var(--muted);
+      background: rgba(6,13,31,0.8);
+      padding: 4px 8px;
+      border-radius: 6px;
     }
 
-    .legend-dot {
-      width: 8px; height: 8px;
-      border-radius: 50%;
-    }
+    .legend-dot { width: 8px; height: 8px; border-radius: 50%; }
 
-    .chart-wrap {
+    /* Router list */
+    .router-list { display: flex; flex-direction: column; gap: 10px; padding: 0 16px 100px; }
+
+    .router-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      cursor: pointer;
+      transition: border-color 0.2s, transform 0.1s;
       position: relative;
-      height: 180px;
+      overflow: hidden;
+    }
+
+    .router-card:active { transform: scale(0.98); }
+
+    .router-card.online { border-left: 3px solid var(--green); }
+    .router-card.offline { border-left: 3px solid var(--accent2); }
+    .router-card.warning { border-left: 3px solid var(--yellow); }
+
+    .router-icon {
+      width: 44px; height: 44px;
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .router-card.online .router-icon { background: rgba(0,255,136,0.1); }
+    .router-card.offline .router-icon { background: rgba(255,77,109,0.1); }
+    .router-card.warning .router-icon { background: rgba(255,214,10,0.1); }
+
+    .router-info { flex: 1; min-width: 0; }
+
+    .router-name {
+      font-weight: 600;
+      font-size: 14px;
+      color: var(--text);
+      margin-bottom: 3px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .router-ip {
+      font-size: 12px;
+      color: var(--muted);
+      font-family: monospace;
+    }
+
+    .router-stats {
+      display: flex;
+      gap: 8px;
+      margin-top: 6px;
+    }
+
+    .rstat {
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 20px;
+      background: rgba(0,200,255,0.08);
+      color: var(--accent);
+    }
+
+    .router-status {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+
+    .status-pill {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      padding: 3px 10px;
+      border-radius: 20px;
+      text-transform: uppercase;
+    }
+
+    .online .status-pill { background: rgba(0,255,136,0.15); color: var(--green); }
+    .offline .status-pill { background: rgba(255,77,109,0.15); color: var(--accent2); }
+    .warning .status-pill { background: rgba(255,214,10,0.15); color: var(--yellow); }
+
+    .ping-time { font-size: 11px; color: var(--muted); font-family: monospace; }
+
+    /* Pulse animation for online routers */
+    .pulse {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      background: var(--green);
+      position: relative;
+    }
+
+    .pulse::after {
+      content: '';
+      position: absolute;
+      inset: -4px;
+      border-radius: 50%;
+      border: 2px solid var(--green);
+      animation: pulseRing 2s ease-out infinite;
+    }
+
+    @keyframes pulseRing {
+      0% { transform: scale(0.8); opacity: 1; }
+      100% { transform: scale(2); opacity: 0; }
+    }
+
+    /* Bottom nav */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      background: rgba(6,13,31,0.97);
+      border-top: 1px solid var(--border);
+      backdrop-filter: blur(20px);
+      display: flex;
+      padding: 10px 0 env(safe-area-inset-bottom, 10px);
+      z-index: 100;
+    }
+
+    .nav-btn {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      padding: 6px;
+      cursor: pointer;
+      opacity: 0.4;
+      transition: opacity 0.2s;
+    }
+
+    .nav-btn.active { opacity: 1; }
+    .nav-btn.active .nav-label { color: var(--accent); }
+
+    .nav-label {
+      font-size: 10px;
+      letter-spacing: 0.5px;
+    }
+
+    /* Detail panel */
+    .detail-panel {
+      position: fixed;
+      inset: 0;
+      background: var(--bg);
+      z-index: 200;
+      display: none;
+      flex-direction: column;
+      overflow-y: auto;
+    }
+
+    .detail-panel.open { display: flex; }
+
+    .detail-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 16px;
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      background: rgba(6,13,31,0.97);
+      backdrop-filter: blur(10px);
+      z-index: 10;
+    }
+
+    .back-btn {
+      width: 36px; height: 36px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+    }
+
+    .detail-title { font-weight: 600; font-size: 16px; }
+    .detail-ip { font-size: 12px; color: var(--muted); font-family: monospace; }
+
+    .detail-body { padding: 16px; flex: 1; }
+
+    .detail-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .dstat {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 16px;
+    }
+
+    .dstat-label {
+      font-size: 10px;
+      color: var(--muted);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .dstat-value {
+      font-family: var(--font-head);
+      font-size: 20px;
+      font-weight: 700;
+    }
+
+    .dstat.rx .dstat-value { color: var(--accent); }
+    .dstat.tx .dstat-value { color: var(--accent2); }
+    .dstat.up .dstat-value { color: var(--green); }
+    .dstat.clients .dstat-value { color: var(--yellow); }
+
+    .chart-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+
+    .chart-box-title {
+      font-family: var(--font-head);
+      font-size: 10px;
+      color: var(--accent);
+      letter-spacing: 2px;
+      margin-bottom: 14px;
     }
 
     canvas { width: 100% !important; }
 
-    /* interface selector */
-    .iface-row {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 16px;
-      overflow-x: auto;
-      padding-bottom: 4px;
-      -webkit-overflow-scrolling: touch;
-      scrollbar-width: none;
+    /* Add router modal */
+    .modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.7);
+      backdrop-filter: blur(4px);
+      z-index: 300;
+      display: none;
+      align-items: flex-end;
     }
 
-    .iface-row::-webkit-scrollbar { display: none; }
+    .modal.open { display: flex; }
 
-    .iface-btn {
-      flex-shrink: 0;
-      padding: 7px 14px;
-      border-radius: 20px;
+    .modal-content {
+      background: var(--bg2);
       border: 1px solid var(--border);
-      background: transparent;
-      color: var(--muted);
-      font-family: var(--font-mono);
-      font-size: 12px;
-      cursor: pointer;
-      transition: all 0.2s;
-      white-space: nowrap;
+      border-radius: 24px 24px 0 0;
+      padding: 24px;
+      width: 100%;
+      max-height: 85vh;
+      overflow-y: auto;
     }
 
-    .iface-btn.active {
-      border-color: var(--accent);
+    .modal-handle {
+      width: 40px; height: 4px;
+      background: var(--border);
+      border-radius: 2px;
+      margin: 0 auto 20px;
+    }
+
+    .modal-title {
+      font-family: var(--font-head);
+      font-size: 14px;
       color: var(--accent);
-      background: rgba(0,212,255,0.08);
+      letter-spacing: 2px;
+      margin-bottom: 20px;
     }
 
-    /* totals */
-    .totals-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      margin-bottom: 16px;
-    }
-
-    .total-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 14px;
-      text-align: center;
-    }
-
-    .total-label {
-      font-size: 10px;
-      font-family: var(--font-mono);
-      color: var(--muted);
-      letter-spacing: 1px;
-      margin-bottom: 6px;
-    }
-
-    .total-value {
-      font-size: 16px;
-      font-weight: 600;
-      font-family: var(--font-mono);
-    }
-
-    .total-card.rx .total-value { color: var(--accent); }
-    .total-card.tx .total-value { color: var(--accent2); }
-
-    /* interval & last update */
-    .footer-row {
+    /* Trial banner */
+    .trial-banner {
+      margin: 0 16px 12px;
+      background: linear-gradient(135deg, rgba(255,214,10,0.1), rgba(255,140,0,0.1));
+      border: 1px solid rgba(255,214,10,0.3);
+      border-radius: 14px;
+      padding: 14px 16px;
       display: flex;
-      justify-content: space-between;
       align-items: center;
-      padding: 12px 0;
-      border-top: 1px solid var(--border);
+      justify-content: space-between;
+      gap: 12px;
     }
 
-    .footer-row span {
-      font-size: 11px;
-      font-family: var(--font-mono);
-      color: var(--muted);
-    }
+    .trial-text { font-size: 13px; color: var(--yellow); font-weight: 600; }
+    .trial-sub { font-size: 11px; color: var(--muted); margin-top: 2px; }
 
-    .footer-row .update-time { color: var(--green); }
+    .upgrade-btn {
+      background: linear-gradient(135deg, var(--yellow), #ff8c00);
+      color: #000;
+      font-weight: 700;
+      font-size: 12px;
+      padding: 8px 16px;
+      border-radius: 20px;
+      border: none;
+      cursor: pointer;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
 
     /* Loader */
     .loader {
       display: inline-block;
-      width: 16px; height: 16px;
-      border: 2px solid var(--border);
-      border-top-color: var(--accent);
+      width: 18px; height: 18px;
+      border: 2px solid rgba(0,0,0,0.2);
+      border-top-color: #000;
       border-radius: 50%;
       animation: spin 0.8s linear infinite;
       vertical-align: middle;
@@ -434,371 +710,684 @@
 
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    .btn .loader { width: 18px; height: 18px; border-color: rgba(0,0,0,0.2); border-top-color: #000; }
+    .empty-state {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--muted);
+    }
+
+    .empty-state svg { opacity: 0.3; margin-bottom: 16px; }
+    .empty-state p { font-size: 14px; }
   </style>
 </head>
 <body>
 <div id="app">
-  <header>
-    <div class="logo">
-      <div class="logo-icon">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#00d4ff" stroke-width="2">
-          <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
-        </svg>
+
+  <!-- ══ LOGIN SCREEN ══ -->
+  <div id="screenLogin" class="screen active">
+    <div class="login-wrap">
+      <div class="brand">
+        <div class="brand-icon">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#00c8ff" stroke-width="2">
+            <circle cx="12" cy="12" r="2"/><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
+          </svg>
+        </div>
+        <h1>MIKROMON</h1>
+        <p>ISP Network Monitor</p>
+        <div class="trial-badge">⚡ 30 días gratis</div>
       </div>
-      <div>
-        <h1>MikroMon</h1>
-        <span>NETWORK MONITOR</span>
+
+      <div class="card">
+        <div class="card-title">Iniciar sesión</div>
+        <div class="field">
+          <label>Email</label>
+          <input id="loginEmail" type="email" placeholder="isp@empresa.com"/>
+        </div>
+        <div class="field">
+          <label>Contraseña</label>
+          <input id="loginPass" type="password" placeholder="••••••••"/>
+        </div>
+        <button class="btn btn-primary" id="btnLogin">ENTRAR</button>
+        <div class="err" id="loginErr"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">¿Nuevo en MikroMon?</div>
+        <div class="field">
+          <label>Nombre del ISP</label>
+          <input id="regName" type="text" placeholder="Mi ISP S.A."/>
+        </div>
+        <div class="field">
+          <label>Email</label>
+          <input id="regEmail" type="email" placeholder="admin@miisp.com"/>
+        </div>
+        <div class="field">
+          <label>Contraseña</label>
+          <input id="regPass" type="password" placeholder="Mínimo 6 caracteres"/>
+        </div>
+        <button class="btn btn-primary" id="btnRegister">CREAR CUENTA GRATIS</button>
+        <div class="err" id="regErr"></div>
       </div>
     </div>
-    <div id="statusDot" class="status-dot"></div>
-  </header>
+  </div>
 
-  <!-- CONFIG SCREEN -->
-  <div id="screenConfig" class="screen active">
-    <div class="config-card">
-      <h2>Conexión</h2>
+  <!-- ══ MAIN DASHBOARD ══ -->
+  <div id="screenMain" class="screen">
+    <div class="header">
+      <div>
+        <div class="header-logo">MIKROMON<span>ISP MONITOR</span></div>
+      </div>
+      <div class="header-right">
+        <div class="notif-btn" id="btnNotif">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#c8deff" stroke-width="2">
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 0 1-3.46 0"/>
+          </svg>
+          <div class="notif-dot" id="notifDot" style="display:none"></div>
+        </div>
+        <div class="avatar" id="avatarBtn">R</div>
+      </div>
+    </div>
+
+    <!-- Trial banner -->
+    <div class="trial-banner" id="trialBanner">
+      <div>
+        <div class="trial-text">⚡ Período de prueba</div>
+        <div class="trial-sub" id="trialDaysLeft">28 días restantes</div>
+      </div>
+      <button class="upgrade-btn" id="btnUpgrade">Activar $5</button>
+    </div>
+
+    <!-- Summary -->
+    <div class="summary">
+      <div class="sum-card online">
+        <div class="sum-num" id="countOnline">0</div>
+        <div class="sum-label">En línea</div>
+      </div>
+      <div class="sum-card offline">
+        <div class="sum-num" id="countOffline">0</div>
+        <div class="sum-label">Caídos</div>
+      </div>
+      <div class="sum-card total">
+        <div class="sum-num" id="countTotal">0</div>
+        <div class="sum-label">Total</div>
+      </div>
+    </div>
+
+    <!-- Map -->
+    <div class="map-section">
+      <div class="section-header">
+        <span class="section-title">MAPA DE RED</span>
+        <div class="map-overlay-controls" style="display:flex;gap:8px">
+          <div class="map-legend"><div class="legend-dot" style="background:var(--green)"></div> Online</div>
+          <div class="map-legend"><div class="legend-dot" style="background:var(--accent2)"></div> Caído</div>
+        </div>
+      </div>
+      <div class="map-canvas">
+        <svg id="networkMap" viewBox="0 0 360 260" preserveAspectRatio="xMidYMid meet">
+          <defs>
+            <filter id="glow">
+              <feGaussianBlur stdDeviation="2" result="blur"/>
+              <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+          </defs>
+          <!-- Central node -->
+          <g id="centerNode">
+            <circle cx="180" cy="130" r="18" fill="rgba(0,200,255,0.15)" stroke="#00c8ff" stroke-width="2"/>
+            <text x="180" y="134" text-anchor="middle" fill="#00c8ff" font-size="9" font-family="Orbitron">HQ</text>
+          </g>
+          <!-- Router nodes rendered by JS -->
+          <g id="routerNodes"></g>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Router list -->
+    <div class="map-section">
+      <div class="section-header">
+        <span class="section-title">ROUTERS</span>
+        <div class="add-btn" id="btnAddRouter">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Agregar
+        </div>
+      </div>
+    </div>
+
+    <div class="router-list" id="routerList">
+      <div class="empty-state">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#4a6899" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/><path d="M7 7h.01M11 7h.01"/></svg>
+        <p>No hay routers.<br/>Toca "Agregar" para comenzar.</p>
+      </div>
+    </div>
+
+    <!-- Bottom nav -->
+    <div class="bottom-nav">
+      <div class="nav-btn active" id="navDash">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        <span class="nav-label">Dashboard</span>
+      </div>
+      <div class="nav-btn" id="navAlerts">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        <span class="nav-label">Alertas</span>
+      </div>
+      <div class="nav-btn" id="navSettings">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93A10 10 0 1 1 4.93 19.07 10 10 0 0 1 19.07 4.93"/></svg>
+        <span class="nav-label">Config</span>
+      </div>
+      <div class="nav-btn" id="navLogout">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+        <span class="nav-label">Salir</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ ROUTER DETAIL PANEL ══ -->
+  <div id="detailPanel" class="detail-panel">
+    <div class="detail-header">
+      <div class="back-btn" id="btnBack">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#c8deff" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+      </div>
+      <div>
+        <div class="detail-title" id="detailName">Router</div>
+        <div class="detail-ip" id="detailIp">0.0.0.0</div>
+      </div>
+      <div style="margin-left:auto">
+        <div class="status-pill" id="detailStatus">Online</div>
+      </div>
+    </div>
+    <div class="detail-body">
+      <div class="detail-stats">
+        <div class="dstat rx">
+          <div class="dstat-label">Download</div>
+          <div class="dstat-value" id="detRx">—</div>
+          <div style="font-size:11px;color:var(--muted)">Mbps</div>
+        </div>
+        <div class="dstat tx">
+          <div class="dstat-label">Upload</div>
+          <div class="dstat-value" id="detTx">—</div>
+          <div style="font-size:11px;color:var(--muted)">Mbps</div>
+        </div>
+        <div class="dstat up">
+          <div class="dstat-label">Uptime</div>
+          <div class="dstat-value" id="detUptime">—</div>
+        </div>
+        <div class="dstat clients">
+          <div class="dstat-label">CPU</div>
+          <div class="dstat-value" id="detCpu">—</div>
+          <div style="font-size:11px;color:var(--muted)">%</div>
+        </div>
+      </div>
+      <div class="chart-box">
+        <div class="chart-box-title">TRÁFICO EN TIEMPO REAL</div>
+        <div style="height:160px;position:relative">
+          <canvas id="detailChart"></canvas>
+        </div>
+      </div>
+      <div class="card" style="margin-bottom:12px">
+        <div class="card-title">Interfaces</div>
+        <div id="ifaceList" style="display:flex;flex-direction:column;gap:8px"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ ADD ROUTER MODAL ══ -->
+  <div class="modal" id="addModal">
+    <div class="modal-content">
+      <div class="modal-handle"></div>
+      <div class="modal-title">AGREGAR ROUTER</div>
       <div class="field">
-        <label>IP Pública / Hostname</label>
-        <input id="cfgHost" type="text" placeholder="190.xxx.xxx.xxx" autocomplete="off" autocorrect="off" spellcheck="false"/>
+        <label>Nombre del sitio</label>
+        <input id="newName" type="text" placeholder="Torre Norte, Nodo Centro..."/>
+      </div>
+      <div class="field">
+        <label>IP Pública</label>
+        <input id="newIp" type="text" placeholder="190.xxx.xxx.xxx" autocorrect="off" spellcheck="false"/>
       </div>
       <div class="field">
         <label>Puerto API</label>
-        <input id="cfgPort" type="number" value="8728"/>
+        <input id="newPort" type="number" value="8728"/>
       </div>
       <div class="field">
-        <label>Usuario</label>
-        <input id="cfgUser" type="text" placeholder="admin" autocomplete="off"/>
+        <label>Usuario MikroTik</label>
+        <input id="newUser" type="text" placeholder="admin" autocorrect="off"/>
       </div>
       <div class="field">
         <label>Contraseña</label>
-        <input id="cfgPass" type="password" placeholder="••••••"/>
+        <input id="newPass" type="password" placeholder="••••••"/>
       </div>
-      <button class="btn btn-primary" id="btnConnect">
-        CONECTAR
-      </button>
-      <div class="error-msg" id="errMsg"></div>
-    </div>
-
-    <div class="config-card">
-      <h2>Backend URL</h2>
       <div class="field">
-        <label>URL de tu servidor (Render/Railway)</label>
-        <input id="cfgBackend" type="url" placeholder="https://tu-app.onrender.com" autocomplete="off" autocorrect="off"/>
+        <label>URL Backend</label>
+        <input id="newBackend" type="url" placeholder="https://tu-app.onrender.com" autocorrect="off"/>
       </div>
-      <p style="font-size:11px;color:var(--muted);font-family:var(--font-mono);margin-top:8px;">
-        Ingresa la URL de tu backend desplegado en Render o Railway.
-      </p>
+      <button class="btn btn-primary" id="btnSaveRouter" style="margin-bottom:10px">GUARDAR ROUTER</button>
+      <button class="btn btn-outline" id="btnCancelModal">Cancelar</button>
+      <div class="err" id="modalErr"></div>
     </div>
   </div>
 
-  <!-- DASHBOARD SCREEN -->
-  <div id="screenDash" class="screen">
-    <!-- Interface selector -->
-    <div class="iface-row" id="ifaceRow"></div>
-
-    <!-- Live stats -->
-    <div class="stats-row">
-      <div class="stat-card down">
-        <div class="stat-label">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="17 11 12 6 7 11"/><polyline points="17 18 12 13 7 18"/></svg>
-          DOWNLOAD
-        </div>
-        <div class="stat-value" id="rxSpeed">—</div>
-        <div class="stat-unit">Mbps</div>
-      </div>
-      <div class="stat-card up">
-        <div class="stat-label">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="17 6 12 11 7 6"/><polyline points="17 13 12 18 7 13"/></svg>
-          UPLOAD
-        </div>
-        <div class="stat-value" id="txSpeed">—</div>
-        <div class="stat-unit">Mbps</div>
-      </div>
-    </div>
-
-    <!-- Chart -->
-    <div class="chart-card">
-      <div class="chart-header">
-        <span class="chart-title">TRÁFICO EN TIEMPO REAL</span>
-        <div class="chart-legend">
-          <div class="legend-item">
-            <div class="legend-dot" style="background:#00d4ff"></div>
-            RX
-          </div>
-          <div class="legend-item">
-            <div class="legend-dot" style="background:#ff6b35"></div>
-            TX
-          </div>
-        </div>
-      </div>
-      <div class="chart-wrap">
-        <canvas id="trafficChart"></canvas>
-      </div>
-    </div>
-
-    <!-- Totals -->
-    <div class="totals-row">
-      <div class="total-card rx">
-        <div class="total-label">TOTAL RX</div>
-        <div class="total-value" id="totalRx">— GB</div>
-      </div>
-      <div class="total-card tx">
-        <div class="total-label">TOTAL TX</div>
-        <div class="total-value" id="totalTx">— GB</div>
-      </div>
-    </div>
-
-    <div class="footer-row">
-      <span>Actualiza cada 3s</span>
-      <span class="update-time" id="lastUpdate">—</span>
-      <button class="btn btn-secondary" id="btnDisconnect" style="width:auto;padding:6px 14px;margin:0;">⏻ Salir</button>
-    </div>
-  </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script>
-// ─── State ────────────────────────────────────────────────────────────────────
-const MAX_POINTS = 30;
-let backendUrl = '';
-let credentials = {};
-let selectedIface = '';
-let pollTimer = null;
-let prevRx = null, prevTx = null, prevTs = null;
-let chart = null;
+// ══════════════════════════════════════════
+//  STATE
+// ══════════════════════════════════════════
+let user = null;
+let routers = [];        // [{id, name, ip, port, user, pass, backend, status, rx, tx, uptime, cpu}]
+let pollTimers = {};
+let detailRouter = null;
+let detailChart = null;
+const rxBuf = Array(30).fill(0);
+const txBuf = Array(30).fill(0);
 
-const rxData = Array(MAX_POINTS).fill(0);
-const txData = Array(MAX_POINTS).fill(0);
-const labels  = Array(MAX_POINTS).fill('');
+// ══════════════════════════════════════════
+//  PERSISTENCE
+// ══════════════════════════════════════════
+function save() {
+  try { localStorage.setItem('mm_user', JSON.stringify(user)); } catch {}
+  try { localStorage.setItem('mm_routers_' + user?.id, JSON.stringify(routers)); } catch {}
+}
 
-// ─── Persist config ───────────────────────────────────────────────────────────
-function saveConfig() {
+function load() {
   try {
-    sessionStorage.setItem('mktcfg', JSON.stringify({ backendUrl, credentials }));
+    const u = localStorage.getItem('mm_user');
+    if (u) user = JSON.parse(u);
   } catch {}
+  if (user) {
+    try {
+      const r = localStorage.getItem('mm_routers_' + user.id);
+      if (r) routers = JSON.parse(r);
+    } catch {}
+  }
 }
 
-function loadConfig() {
-  try {
-    const s = sessionStorage.getItem('mktcfg');
-    if (s) {
-      const c = JSON.parse(s);
-      backendUrl = c.backendUrl || '';
-      credentials = c.credentials || {};
-      document.getElementById('cfgBackend').value = backendUrl;
-      document.getElementById('cfgHost').value = credentials.host || '';
-      document.getElementById('cfgPort').value = credentials.port || '8728';
-      document.getElementById('cfgUser').value = credentials.user || '';
-    }
-  } catch {}
-}
-
-// ─── Chart setup ─────────────────────────────────────────────────────────────
-function initChart() {
-  const ctx = document.getElementById('trafficChart').getContext('2d');
-  chart = new Chart(ctx, {
-    type: 'line',
-    data: {
-      labels,
-      datasets: [
-        {
-          label: 'RX',
-          data: [...rxData],
-          borderColor: '#00d4ff',
-          backgroundColor: 'rgba(0,212,255,0.08)',
-          borderWidth: 2,
-          pointRadius: 0,
-          fill: true,
-          tension: 0.4,
-        },
-        {
-          label: 'TX',
-          data: [...txData],
-          borderColor: '#ff6b35',
-          backgroundColor: 'rgba(255,107,53,0.08)',
-          borderWidth: 2,
-          pointRadius: 0,
-          fill: true,
-          tension: 0.4,
-        }
-      ]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      animation: { duration: 300 },
-      plugins: { legend: { display: false } },
-      scales: {
-        x: { display: false },
-        y: {
-          min: 0,
-          grid: { color: 'rgba(30,45,69,0.8)' },
-          ticks: {
-            color: '#4a6080',
-            font: { family: 'Share Tech Mono', size: 10 },
-            callback: v => v.toFixed(1) + ' M'
-          }
-        }
-      }
-    }
-  });
-}
-
-function updateChart(rx, tx) {
-  rxData.push(rx); rxData.shift();
-  txData.push(tx); txData.shift();
-  const t = new Date().toLocaleTimeString('es', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-  labels.push(t); labels.shift();
-  chart.data.labels = [...labels];
-  chart.data.datasets[0].data = [...rxData];
-  chart.data.datasets[1].data = [...txData];
-  chart.update('none');
-}
-
-// ─── Helpers ─────────────────────────────────────────────────────────────────
-function bytesToGb(b) { return (parseInt(b || 0) / 1e9).toFixed(2) + ' GB'; }
-function bpsToMbps(b) { return (b / 1e6).toFixed(2); }
-
-async function apiCall(endpoint, body) {
-  const url = backendUrl.replace(/\/$/, '') + endpoint;
-  const r = await fetch(url, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ ...credentials, ...body })
-  });
-  return r.json();
-}
-
-// ─── Connect ─────────────────────────────────────────────────────────────────
-document.getElementById('btnConnect').addEventListener('click', async () => {
-  const btn = document.getElementById('btnConnect');
-  const err = document.getElementById('errMsg');
+// ══════════════════════════════════════════
+//  AUTH (local demo — replace with real backend)
+// ══════════════════════════════════════════
+document.getElementById('btnRegister').addEventListener('click', () => {
+  const name = document.getElementById('regName').value.trim();
+  const email = document.getElementById('regEmail').value.trim();
+  const pass = document.getElementById('regPass').value;
+  const err = document.getElementById('regErr');
   err.style.display = 'none';
 
-  backendUrl = document.getElementById('cfgBackend').value.trim();
-  if (!backendUrl) { showErr('Ingresa la URL del backend'); return; }
+  if (!name || !email || pass.length < 6) {
+    err.textContent = 'Completa todos los campos (contraseña mínimo 6 caracteres)';
+    err.style.display = 'block'; return;
+  }
 
-  credentials = {
-    host: document.getElementById('cfgHost').value.trim(),
-    port: parseInt(document.getElementById('cfgPort').value) || 8728,
-    user: document.getElementById('cfgUser').value.trim(),
-    pass: document.getElementById('cfgPass').value,
+  user = { id: Date.now().toString(), name, email, created: Date.now() };
+  save();
+  showMain();
+});
+
+document.getElementById('btnLogin').addEventListener('click', () => {
+  const email = document.getElementById('loginEmail').value.trim();
+  const err = document.getElementById('loginErr');
+  err.style.display = 'none';
+
+  if (!email) { err.textContent = 'Ingresa tu email'; err.style.display = 'block'; return; }
+
+  // Demo: accept any previously registered email
+  if (user && user.email === email) { showMain(); return; }
+
+  // Try loading from storage
+  err.textContent = 'Cuenta no encontrada. Regístrate primero.';
+  err.style.display = 'block';
+});
+
+// ══════════════════════════════════════════
+//  NAVIGATION
+// ══════════════════════════════════════════
+function showMain() {
+  document.getElementById('screenLogin').classList.remove('active');
+  document.getElementById('screenMain').classList.add('active');
+  updateTrialBanner();
+  renderRouterList();
+  renderMap();
+  startAllPolling();
+}
+
+function showLogin() {
+  document.getElementById('screenMain').classList.remove('active');
+  document.getElementById('screenLogin').classList.add('active');
+  stopAllPolling();
+}
+
+document.getElementById('navLogout').addEventListener('click', () => {
+  user = null;
+  try { localStorage.removeItem('mm_user'); } catch {}
+  showLogin();
+});
+
+// ══════════════════════════════════════════
+//  TRIAL BANNER
+// ══════════════════════════════════════════
+function updateTrialBanner() {
+  if (!user) return;
+  const daysPassed = Math.floor((Date.now() - user.created) / 86400000);
+  const daysLeft = Math.max(0, 30 - daysPassed);
+  document.getElementById('trialDaysLeft').textContent = daysLeft + ' días restantes';
+  if (daysLeft === 0) {
+    document.getElementById('trialBanner').style.background = 'linear-gradient(135deg,rgba(255,77,109,0.15),rgba(255,77,109,0.05))';
+    document.getElementById('trialBanner').style.borderColor = 'rgba(255,77,109,0.4)';
+  }
+}
+
+document.getElementById('btnUpgrade').addEventListener('click', () => {
+  alert('Para activar la licencia completa ($5 pago único), ir a Google Play Store y completar la compra desde la app instalada.');
+});
+
+// ══════════════════════════════════════════
+//  ADD ROUTER MODAL
+// ══════════════════════════════════════════
+document.getElementById('btnAddRouter').addEventListener('click', () => {
+  document.getElementById('addModal').classList.add('open');
+});
+
+document.getElementById('btnCancelModal').addEventListener('click', () => {
+  document.getElementById('addModal').classList.remove('open');
+});
+
+document.getElementById('btnSaveRouter').addEventListener('click', async () => {
+  const btn = document.getElementById('btnSaveRouter');
+  const err = document.getElementById('modalErr');
+  err.style.display = 'none';
+
+  const r = {
+    id: Date.now().toString(),
+    name: document.getElementById('newName').value.trim(),
+    ip: document.getElementById('newIp').value.trim(),
+    port: parseInt(document.getElementById('newPort').value) || 8728,
+    user: document.getElementById('newUser').value.trim(),
+    pass: document.getElementById('newPass').value,
+    backend: document.getElementById('newBackend').value.trim().replace(/\/$/, ''),
+    status: 'checking',
+    rx: 0, tx: 0, uptime: '—', cpu: '—',
+    prevRx: null, prevTx: null, prevTs: null,
+    rxMbps: 0, txMbps: 0,
   };
 
-  if (!credentials.host || !credentials.user) { showErr('Completa host y usuario'); return; }
+  if (!r.name || !r.ip || !r.user || !r.backend) {
+    err.textContent = 'Completa nombre, IP, usuario y backend URL';
+    err.style.display = 'block'; return;
+  }
 
-  btn.innerHTML = 'CONECTANDO <span class="loader"></span>';
+  btn.innerHTML = 'PROBANDO CONEXIÓN <span class="loader"></span>';
   btn.disabled = true;
 
   try {
-    const res = await apiCall('/api/connect', {});
-    if (!res.ok) throw new Error(res.error || 'Error de conexión');
-
-    // Load interfaces
-    const ifRes = await apiCall('/api/interfaces', {});
-    if (!ifRes.ok) throw new Error(ifRes.error);
-
-    saveConfig();
-    buildIfaceRow(ifRes.data);
-    showDash();
-    startPolling();
+    const res = await apiCall(r, '/api/connect', {});
+    if (!res.ok) throw new Error(res.error || 'Sin conexión');
+    r.status = 'online';
+    routers.push(r);
+    save();
+    document.getElementById('addModal').classList.remove('open');
+    renderRouterList();
+    renderMap();
+    startPolling(r);
+    clearInputs();
   } catch(e) {
-    showErr(e.message);
+    err.textContent = e.message;
+    err.style.display = 'block';
   } finally {
-    btn.innerHTML = 'CONECTAR';
+    btn.innerHTML = 'GUARDAR ROUTER';
     btn.disabled = false;
   }
 });
 
-function showErr(msg) {
-  const el = document.getElementById('errMsg');
-  el.textContent = msg;
-  el.style.display = 'block';
-}
-
-function buildIfaceRow(ifaces) {
-  const row = document.getElementById('ifaceRow');
-  row.innerHTML = '';
-  // Filter running interfaces
-  const active = ifaces.filter(i => i.running === 'true' || i.running === true);
-  const list = active.length ? active : ifaces;
-  list.slice(0, 10).forEach((iface, idx) => {
-    const btn = document.createElement('button');
-    btn.className = 'iface-btn' + (idx === 0 ? ' active' : '');
-    btn.textContent = iface.name;
-    btn.addEventListener('click', () => {
-      document.querySelectorAll('.iface-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      selectedIface = iface.name;
-      prevRx = prevTx = prevTs = null;
-    });
-    if (idx === 0) selectedIface = iface.name;
-    row.appendChild(btn);
+function clearInputs() {
+  ['newName','newIp','newPort','newUser','newPass','newBackend'].forEach(id => {
+    const el = document.getElementById(id);
+    if (id === 'newPort') el.value = '8728';
+    else el.value = '';
   });
 }
 
-// ─── Polling ─────────────────────────────────────────────────────────────────
-function startPolling() {
-  pollOnce();
-  pollTimer = setInterval(pollOnce, 3000);
+// ══════════════════════════════════════════
+//  API
+// ══════════════════════════════════════════
+async function apiCall(r, endpoint, body) {
+  const res = await fetch(r.backend + endpoint, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ host: r.ip, port: r.port, user: r.user, pass: r.pass, ...body })
+  });
+  return res.json();
 }
 
-async function pollOnce() {
+// ══════════════════════════════════════════
+//  POLLING
+// ══════════════════════════════════════════
+function startAllPolling() {
+  routers.forEach(r => startPolling(r));
+}
+
+function stopAllPolling() {
+  Object.values(pollTimers).forEach(t => clearInterval(t));
+  pollTimers = {};
+}
+
+function startPolling(r) {
+  if (pollTimers[r.id]) clearInterval(pollTimers[r.id]);
+  pollOnce(r);
+  pollTimers[r.id] = setInterval(() => pollOnce(r), 5000);
+}
+
+async function pollOnce(r) {
   try {
-    const res = await apiCall('/api/traffic', { interface: selectedIface });
-    if (!res.ok) return;
+    const res = await apiCall(r, '/api/traffic', { interface: 'ether1' });
+    if (!res.ok) throw new Error();
 
     const d = res.data;
     const ts = res.timestamp;
     const rx = parseInt(d['rx-byte'] || 0);
     const tx = parseInt(d['tx-byte'] || 0);
 
-    // Total
-    document.getElementById('totalRx').textContent = bytesToGb(rx);
-    document.getElementById('totalTx').textContent = bytesToGb(tx);
-
-    // Speed (bps)
-    if (prevRx !== null && prevTs !== null) {
-      const dt = (ts - prevTs) / 1000;
-      const rxRate = Math.max(0, (rx - prevRx) * 8 / dt);
-      const txRate = Math.max(0, (tx - prevTx) * 8 / dt);
-
-      document.getElementById('rxSpeed').textContent = bpsToMbps(rxRate);
-      document.getElementById('txSpeed').textContent = bpsToMbps(txRate);
-      updateChart(rxRate / 1e6, txRate / 1e6);
+    if (r.prevRx !== null) {
+      const dt = (ts - r.prevTs) / 1000;
+      r.rxMbps = parseFloat(Math.max(0, (rx - r.prevRx) * 8 / dt / 1e6).toFixed(2));
+      r.txMbps = parseFloat(Math.max(0, (tx - r.prevTx) * 8 / dt / 1e6).toFixed(2));
     }
 
-    prevRx = rx; prevTx = tx; prevTs = ts;
+    r.prevRx = rx; r.prevTx = tx; r.prevTs = ts;
+    r.rx = rx; r.tx = tx;
+    r.status = 'online';
 
-    // Status
-    document.getElementById('statusDot').className = 'status-dot online';
-    document.getElementById('lastUpdate').textContent =
-      new Date().toLocaleTimeString('es', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    // Uptime & CPU via system resource
+    try {
+      const sysRes = await apiCall(r, '/api/connect', {});
+      if (sysRes.ok && sysRes.data) {
+        r.uptime = formatUptime(sysRes.data.uptime || '');
+        r.cpu = sysRes.data['cpu-load'] || '—';
+      }
+    } catch {}
 
-  } catch(e) {
-    document.getElementById('statusDot').className = 'status-dot';
+  } catch {
+    r.status = 'offline';
+    r.rxMbps = 0; r.txMbps = 0;
+  }
+
+  updateRouterCard(r);
+  updateSummary();
+  updateMap();
+
+  if (detailRouter && detailRouter.id === r.id) updateDetail(r);
+}
+
+function formatUptime(s) {
+  if (!s) return '—';
+  const m = s.match(/(\d+)w.*?(\d+)d.*?(\d+)h/);
+  if (m) return `${m[1]}s ${m[2]}d ${m[3]}h`;
+  const m2 = s.match(/(\d+)d.*?(\d+)h/);
+  if (m2) return `${m2[1]}d ${m2[2]}h`;
+  return s.slice(0, 8);
+}
+
+// ══════════════════════════════════════════
+//  RENDER
+// ══════════════════════════════════════════
+function renderRouterList() {
+  const list = document.getElementById('routerList');
+  if (routers.length === 0) {
+    list.innerHTML = `<div class="empty-state">
+      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#4a6899" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/><path d="M7 7h.01M11 7h.01"/></svg>
+      <p>No hay routers.<br/>Toca "Agregar" para comenzar.</p>
+    </div>`;
+    return;
+  }
+
+  list.innerHTML = routers.map(r => `
+    <div class="router-card ${r.status}" id="card-${r.id}" onclick="openDetail('${r.id}')">
+      <div class="router-icon">
+        ${routerSVG(r.status)}
+      </div>
+      <div class="router-info">
+        <div class="router-name">${r.name}</div>
+        <div class="router-ip">${r.ip}:${r.port}</div>
+        <div class="router-stats">
+          <span class="rstat">↓ ${r.rxMbps || 0} M</span>
+          <span class="rstat" style="color:var(--accent2)">↑ ${r.txMbps || 0} M</span>
+        </div>
+      </div>
+      <div class="router-status">
+        <div class="status-pill">${r.status === 'online' ? 'Online' : r.status === 'offline' ? 'Caído' : '...'}</div>
+        ${r.status === 'online' ? '<div class="pulse"></div>' : ''}
+      </div>
+    </div>
+  `).join('');
+}
+
+function updateRouterCard(r) {
+  const card = document.getElementById('card-' + r.id);
+  if (!card) { renderRouterList(); return; }
+  card.className = 'router-card ' + r.status;
+  card.querySelector('.router-stats').innerHTML = `
+    <span class="rstat">↓ ${r.rxMbps || 0} M</span>
+    <span class="rstat" style="color:var(--accent2)">↑ ${r.txMbps || 0} M</span>
+  `;
+  card.querySelector('.status-pill').textContent = r.status === 'online' ? 'Online' : r.status === 'offline' ? 'Caído' : '...';
+}
+
+function routerSVG(status) {
+  const color = status === 'online' ? '#00ff88' : status === 'offline' ? '#ff4d6d' : '#ffd60a';
+  return `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2">
+    <rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/><path d="M7 7h.01M11 7h.01"/>
+  </svg>`;
+}
+
+function updateSummary() {
+  const online = routers.filter(r => r.status === 'online').length;
+  const offline = routers.filter(r => r.status === 'offline').length;
+  document.getElementById('countOnline').textContent = online;
+  document.getElementById('countOffline').textContent = offline;
+  document.getElementById('countTotal').textContent = routers.length;
+
+  // Show alert dot if any offline
+  document.getElementById('notifDot').style.display = offline > 0 ? 'block' : 'none';
+}
+
+// ══════════════════════════════════════════
+//  NETWORK MAP
+// ══════════════════════════════════════════
+function renderMap() {
+  updateMap();
+}
+
+function updateMap() {
+  const g = document.getElementById('routerNodes');
+  if (!g) return;
+
+  const cx = 180, cy = 130;
+  const count = routers.length;
+  if (count === 0) { g.innerHTML = ''; return; }
+
+  const radius = Math.min(90, 50 + count * 5);
+  g.innerHTML = routers.map((r, i) => {
+    const angle = (i / count) * 2 * Math.PI - Math.PI / 2;
+    const x = cx + radius * Math.cos(angle);
+    const y = cy + radius * Math.sin(angle);
+    const color = r.status === 'online' ? '#00ff88' : r.status === 'offline' ? '#ff4d6d' : '#ffd60a';
+    const label = r.name.length > 8 ? r.name.slice(0, 8) + '…' : r.name;
+
+    return `
+      <line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" stroke="${color}" stroke-width="1" stroke-opacity="0.3" stroke-dasharray="4,4"/>
+      <circle cx="${x}" cy="${y}" r="12" fill="rgba(${r.status==='online'?'0,255,136':'255,77,109'},0.1)" stroke="${color}" stroke-width="1.5" filter="url(#glow)" onclick="openDetail('${r.id}')" style="cursor:pointer"/>
+      <text x="${x}" y="${y+4}" text-anchor="middle" fill="${color}" font-size="7" font-family="Orbitron">${label.slice(0,4)}</text>
+      ${r.status==='online'?`<circle cx="${x}" cy="${y}" r="16" fill="none" stroke="${color}" stroke-width="1" stroke-opacity="0.3"><animate attributeName="r" values="12;20;12" dur="3s" repeatCount="indefinite"/><animate attributeName="stroke-opacity" values="0.3;0;0.3" dur="3s" repeatCount="indefinite"/></circle>`:''}
+    `;
+  }).join('');
+}
+
+// ══════════════════════════════════════════
+//  DETAIL PANEL
+// ══════════════════════════════════════════
+function openDetail(id) {
+  detailRouter = routers.find(r => r.id === id);
+  if (!detailRouter) return;
+
+  document.getElementById('detailName').textContent = detailRouter.name;
+  document.getElementById('detailIp').textContent = detailRouter.ip + ':' + detailRouter.port;
+  document.getElementById('detailStatus').textContent = detailRouter.status === 'online' ? 'Online' : 'Caído';
+  document.getElementById('detailStatus').className = 'status-pill';
+
+  // Reset chart buffers
+  rxBuf.fill(0); txBuf.fill(0);
+  initDetailChart();
+  updateDetail(detailRouter);
+
+  document.getElementById('detailPanel').classList.add('open');
+}
+
+document.getElementById('btnBack').addEventListener('click', () => {
+  document.getElementById('detailPanel').classList.remove('open');
+  detailRouter = null;
+  if (detailChart) { detailChart.destroy(); detailChart = null; }
+});
+
+function updateDetail(r) {
+  document.getElementById('detRx').textContent = r.rxMbps || '0.00';
+  document.getElementById('detTx').textContent = r.txMbps || '0.00';
+  document.getElementById('detUptime').textContent = r.uptime || '—';
+  document.getElementById('detCpu').textContent = r.cpu || '—';
+
+  if (detailChart) {
+    rxBuf.push(r.rxMbps || 0); rxBuf.shift();
+    txBuf.push(r.txMbps || 0); txBuf.shift();
+    detailChart.data.datasets[0].data = [...rxBuf];
+    detailChart.data.datasets[1].data = [...txBuf];
+    detailChart.update('none');
   }
 }
 
-// ─── Navigation ───────────────────────────────────────────────────────────────
-function showDash() {
-  document.getElementById('screenConfig').classList.remove('active');
-  document.getElementById('screenDash').classList.add('active');
-  if (!chart) initChart();
+function initDetailChart() {
+  if (detailChart) detailChart.destroy();
+  const ctx = document.getElementById('detailChart').getContext('2d');
+  detailChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: Array(30).fill(''),
+      datasets: [
+        { label: 'RX', data: [...rxBuf], borderColor: '#00c8ff', backgroundColor: 'rgba(0,200,255,0.08)', borderWidth: 2, pointRadius: 0, fill: true, tension: 0.4 },
+        { label: 'TX', data: [...txBuf], borderColor: '#ff4d6d', backgroundColor: 'rgba(255,77,109,0.08)', borderWidth: 2, pointRadius: 0, fill: true, tension: 0.4 },
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      animation: { duration: 300 },
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { display: false },
+        y: { min: 0, grid: { color: 'rgba(26,48,96,0.8)' }, ticks: { color: '#4a6899', font: { size: 10 }, callback: v => v + 'M' } }
+      }
+    }
+  });
 }
 
-function showConfig() {
-  document.getElementById('screenDash').classList.remove('active');
-  document.getElementById('screenConfig').classList.add('active');
-  if (pollTimer) clearInterval(pollTimer);
-  document.getElementById('statusDot').className = 'status-dot';
-}
-
-document.getElementById('btnDisconnect').addEventListener('click', showConfig);
-
-// ─── Boot ─────────────────────────────────────────────────────────────────────
-loadConfig();
+// ══════════════════════════════════════════
+//  BOOT
+// ══════════════════════════════════════════
+load();
+if (user) showMain();
 </script>
 </body>
 </html>
